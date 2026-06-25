@@ -1,0 +1,10 @@
+# Minimal dependencies for the current milestone:
+# MOSEI loading, video preprocessing, fusion utilities, and smoke tests.
+numpy
+pandas
+h5py
+scikit-learn
+opencv-python
+moviepy
+joblib
+tqdm

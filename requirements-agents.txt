@@ -1,0 +1,6 @@
+# Optional heavyweight agent dependencies.
+#
+# On Windows, funasr depends on editdistance. If pip cannot find a prebuilt
+# editdistance wheel for your Python version, it will need Microsoft C++ Build
+# Tools. Python 3.11 or 3.12 is usually smoother for this stack than Python 3.13.
+funasr

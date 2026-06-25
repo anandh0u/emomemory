@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local data and generated ML artifacts
+artifacts/
+datasets/
+outputs/
+catboost_info/
+third_party/
+*.csd
+*.joblib
+*.pkl
+*.pt
+*.pth
+*.onnx
+*.h5
+*.hdf5
+
+# Runtime logs and tunnel state
+*.log
+*.err
+cf_out.txt
+tunnel_url.txt
+
+# Local tools and binaries
+tools/
+*.exe
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,16 @@
+torch>=2.0
+torchvision
+transformers>=4.40
+ultralytics
+catboost
+scikit-learn
+librosa
+soundfile
+opencv-python
+moviepy
+numpy
+pandas
+h5py
+openai-whisper
+joblib
+tqdm
