@@ -30,9 +30,8 @@ env/
 .env
 .env.local
 
-# Streamlit secrets (API keys)
-# Uncomment to commit secrets to repo (NOT recommended for production)
-# .streamlit/secrets.toml
+# Streamlit secrets (API keys) — NEVER commit this file
+.streamlit/secrets.toml
 
 # Third party packages with setup.py
 third_party/

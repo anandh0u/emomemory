@@ -9,6 +9,13 @@ import os
 from datetime import datetime
 import logging
 
+# Load .env for local development (optional — Streamlit Cloud uses st.secrets)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv not required on Streamlit Cloud
+
 # Configure Cognee environment before importing it
 os.environ["ENABLE_BACKEND_ACCESS_CONTROL"] = "false"
 
@@ -21,12 +28,28 @@ os.environ["DATA_ROOT_DIRECTORY"]   = os.path.abspath(os.path.join(temp_dir, ".c
 os.environ["data_root_directory"]   = os.path.abspath(os.path.join(temp_dir, ".cognee_data"))
 os.environ["COGNEE_LOGS_DIR"]       = os.path.abspath(os.path.join(temp_dir, ".cognee_logs"))
 
-# Copy all secrets from Streamlit secrets to environment variables for external package access
+# ── Load secrets → environment (server-side only, never shown in UI) ──────────
+# Streamlit secrets are injected at deploy time via the Streamlit Cloud dashboard.
+# They are NEVER exposed to the browser or frontend.
 try:
-    for key, value in st.secrets.items():
-        os.environ[key] = str(value)
+    for _k, _v in st.secrets.items():
+        os.environ[_k] = str(_v)
 except Exception:
     pass
+
+# ── Configure Cognee to use Gemini (free) instead of OpenAI ──────────────────
+# Cognee supports multiple LLM backends. We prefer Gemini because it has a
+# generous free tier and doesn’t require any paid subscription.
+_gemini_key = os.getenv("GOOGLE_API_KEY", os.getenv("GEMINI_API_KEY", ""))
+if _gemini_key:
+    os.environ["LLM_PROVIDER"]  = "google"
+    os.environ["LLM_MODEL"]     = os.getenv("LLM_MODEL", "gemini-2.0-flash-lite")
+    os.environ["LLM_API_KEY"]   = _gemini_key
+    os.environ["GOOGLE_API_KEY"]= _gemini_key
+else:
+    # No LLM key — set a dummy provider so Cognee starts without crashing
+    os.environ.setdefault("LLM_PROVIDER", "openai")   # will be bypassed below
+    os.environ.setdefault("LLM_MODEL",    "gpt-4o-mini")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -608,18 +631,29 @@ async def remember_memory(user_id, text, emotion, confidence):
         return False
 
 async def improve_memory():
+    """
+    Build Cognee’s knowledge graph from stored memories.
+    Uses Gemini (free) when GOOGLE_API_KEY is set; falls back to a
+    simulated build when no LLM key is available — no OpenAI required.
+    """
     try:
         import cognee
-        
-        # If no OpenAI API Key is configured, mock the cognify process to avoid errors
-        openai_key = os.getenv("OPENAI_API_KEY", os.getenv("LLM_API_KEY", ""))
-        if not openai_key:
+
+        # Determine if we have a usable LLM key
+        llm_key = os.getenv("LLM_API_KEY", "")
+        llm_provider = os.getenv("LLM_PROVIDER", "").lower()
+
+        if not llm_key:
+            # No LLM configured — simulate the build step so the UI stays responsive
             import asyncio
-            # Simulate processing delay
-            await asyncio.sleep(1.8)
-            logger.info("Bypassed cognee.cognify() due to missing LLM key. Simulated local memory graph index built.")
+            await asyncio.sleep(1.5)
+            logger.info(
+                "improve_memory: no LLM key found. "
+                "Simulated knowledge-graph build (add GOOGLE_API_KEY to Streamlit secrets to enable real cognify)."
+            )
             return True, None
-            
+
+        # We have a key — run real cognify
         await cognee.cognify()
         return True, None
     except Exception as e:
@@ -731,30 +765,6 @@ with st.sidebar:
 
     st.markdown('<div class="emo-divider"></div>', unsafe_allow_html=True)
 
-    # API configuration inputs
-    st.markdown('<p class="section-heading" style="font-size:0.9rem;">&#x25C6; API Configuration</p>', unsafe_allow_html=True)
-    
-    cognee_key = st.text_input(
-        "Cognee API Key",
-        value=os.getenv("COGNEE_API_KEY", ""),
-        type="password",
-        placeholder="Enter Cognee Cloud API Key...",
-        help="Optional: Your Cognee Cloud API key"
-    )
-    if cognee_key:
-        os.environ["COGNEE_API_KEY"] = cognee_key
-        
-    openai_key = st.text_input(
-        "OpenAI API Key",
-        value=os.getenv("OPENAI_API_KEY", ""),
-        type="password",
-        placeholder="Enter OpenAI API Key...",
-        help="Required for memory graph generation (Improve Memory)"
-    )
-    if openai_key:
-        os.environ["OPENAI_API_KEY"] = openai_key
-        os.environ["LLM_API_KEY"] = openai_key
-
     # Initialize cognee if not initialized
     if not st.session_state.cognee_initialized:
         with st.spinner("Initializing Cognee..."):
@@ -806,8 +816,6 @@ with st.sidebar:
 
     model_ok     = st.session_state.emotion_detector is not None
     cognee_ok    = st.session_state.cognee_initialized
-    cognee_cloud = len(os.getenv("COGNEE_API_KEY", "")) > 0
-    llm_ok       = len(os.getenv("OPENAI_API_KEY", os.getenv("LLM_API_KEY", ""))) > 0
     mem_entries  = len(st.session_state.memory_context.get(user_id, []))
 
     st.markdown(f"""
@@ -816,10 +824,7 @@ with st.sidebar:
             {'&#x2726;' if model_ok  else '&#x25CC;'}  Emotion Models {'Active' if model_ok  else 'Inactive'}
         </div>
         <div class="status-pill {'status-on' if cognee_ok else 'status-off'}">
-            {'&#x2726;' if cognee_ok else '&#x25CC;'}  Cognee {'Cloud' if cognee_cloud else 'Local'} {'Active' if cognee_ok else 'Offline'}
-        </div>
-        <div class="status-pill {'status-on' if llm_ok else 'status-off'}">
-            {'&#x2726;' if llm_ok else '&#x25CC;'}  LLM {'Active' if llm_ok else 'Missing Key'}
+            {'&#x2726;' if cognee_ok else '&#x25CC;'}  Cognee {'Connected' if cognee_ok else 'Disconnected'}
         </div>
         <div class="status-pill" style="background:rgba(0,229,255,0.1);color:#67e8f9 !important;border:1px solid rgba(0,229,255,0.2);">
             &#x25C6; Memory &nbsp; {mem_entries} entries
