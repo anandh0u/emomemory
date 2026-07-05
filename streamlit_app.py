@@ -113,33 +113,73 @@ html, body, .stApp {
     color: var(--text-hi) !important;
     font-family: 'Inter', sans-serif !important;
 }
-/* Preserve Material Symbols font for icon elements */
-[data-testid="stSidebar"] .material-symbols-rounded,
-[data-testid="stSidebar"] [class*="material"],
-[data-testid="stSidebar"] span[class*="icon"] {
-    font-family: 'Material Symbols Rounded' !important;
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+
+/* ═══════════════════════════════════════════════════════
+   NUCLEAR FIX: Sidebar collapse arrow "keyboard_double_arrow_left"
+   The Material Symbols font may be blocked by CSP on Streamlit Cloud.
+   Strategy: zero out the raw text with font-size:0, then inject a
+   real arrow character via ::before using system fonts.
+   ═══════════════════════════════════════════════════════ */
+
+/* 1. Hide the raw broken icon text globally */
+.material-symbols-rounded {
+    font-family: 'Material Symbols Rounded', sans-serif !important;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24 !important;
+    font-size: 0 !important;      /* hide raw text */
+    line-height: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 24px !important;
+    height: 24px !important;
+    overflow: hidden !important;
 }
 
-/* Fix sidebar collapse/expand arrow button */
-[data-testid="collapsedControl"],
-[data-testid="stSidebarCollapsedControl"] {
+/* 2. Inject a system-font arrow for the sidebar collapse icon */
+[data-testid="stSidebarCollapseButton"] .material-symbols-rounded::before,
+[data-testid="stSidebarCollapsedControl"] .material-symbols-rounded::before,
+[data-testid="collapsedControl"] .material-symbols-rounded::before,
+button[aria-label*="sidebar"] .material-symbols-rounded::before,
+button[aria-label*="Sidebar"] .material-symbols-rounded::before,
+button[aria-label*="Close"] .material-symbols-rounded::before,
+button[aria-label*="Open"] .material-symbols-rounded::before {
+    content: "❮";
+    font-size: 15px !important;
+    font-family: 'Inter', Arial, sans-serif !important;
+    color: var(--text-hi) !important;
+    line-height: 1 !important;
+    display: block !important;
+}
+
+/* 3. Collapsed state arrow points right */
+[data-testid="stSidebarCollapsedControl"] .material-symbols-rounded::before,
+[data-testid="collapsedControl"] .material-symbols-rounded::before {
+    content: "❯" !important;
+}
+
+/* 4. Style the collapse button itself */
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="collapsedControl"] button {
     background: rgba(124,92,252,0.15) !important;
     border: 1px solid var(--border) !important;
     border-radius: 8px !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.2s ease !important;
 }
-[data-testid="collapsedControl"] span,
-[data-testid="stSidebarCollapsedControl"] span,
-button[kind="header"] span {
-    font-family: 'Material Symbols Rounded' !important;
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
-    font-size: 20px !important;
-    color: var(--text-hi) !important;
+[data-testid="stSidebarCollapseButton"] button:hover,
+[data-testid="stSidebarCollapsedControl"] button:hover,
+[data-testid="collapsedControl"] button:hover {
+    background: rgba(124,92,252,0.35) !important;
 }
 
-/* Catch-all: any span that is ONLY an icon keyword — hide raw text fallback */
-span.notranslate {
-    font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
+/* 5. Restore non-sidebar icons back to visible if needed */
+[data-testid="stSidebar"] .material-symbols-rounded {
+    font-family: 'Material Symbols Rounded', sans-serif !important;
 }
 [data-testid="stSidebar"] input,
 [data-testid="stSidebar"] textarea {
