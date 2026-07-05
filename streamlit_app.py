@@ -15,17 +15,17 @@ logger = logging.getLogger(__name__)
 # Page config with professional styling
 st.set_page_config(
     page_title="EmoMemory | AI That Never Forgets",
-    page_icon="🧠",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Professional custom CSS - Claude-level design
+# Professional custom CSS - Dark theme with custom icons
 st.markdown("""
 <style>
-    /* Global styles */
+    /* Global styles - Dark theme */
     .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
     }
     
     /* Header styling */
@@ -34,7 +34,8 @@ st.markdown("""
         padding: 2rem;
         border-radius: 16px;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        border: 1px solid rgba(102, 126, 234, 0.2);
     }
     
     .main-header h1 {
@@ -62,18 +63,19 @@ st.markdown("""
         margin-top: 1rem;
     }
     
-    /* Card styling */
+    /* Card styling - Dark theme */
     .emotion-card {
-        background: white;
+        background: rgba(26, 26, 46, 0.8);
         padding: 2rem;
         border-radius: 16px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         margin: 1rem 0;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        backdrop-filter: blur(10px);
     }
     
     .emotion-card h2 {
-        color: #1a1a2e;
+        color: #ffffff;
         font-size: 1.8rem;
         margin: 0 0 1rem 0;
     }
@@ -87,9 +89,9 @@ st.markdown("""
         background-clip: text;
     }
     
-    /* Sidebar styling */
+    /* Sidebar styling - Dark theme */
     .css-1d391kg {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
     }
     
     /* Button styling */
@@ -108,16 +110,18 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
     }
     
-    /* Input styling */
+    /* Input styling - Dark theme */
     .stTextArea > div > div > textarea {
         border-radius: 8px;
-        border: 2px solid #e2e8f0;
+        border: 2px solid rgba(102, 126, 234, 0.3);
         padding: 1rem;
+        background: rgba(26, 26, 46, 0.5);
+        color: #ffffff;
     }
     
     .stTextArea > div > div > textarea:focus {
         border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     }
     
     /* Progress bar styling */
@@ -125,16 +129,18 @@ st.markdown("""
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
     }
     
-    /* Tab styling */
+    /* Tab styling - Dark theme */
     .stTabs [data-baseweb="tab-list"] {
         gap: 2rem;
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: white;
+        background: rgba(26, 26, 46, 0.5);
         border-radius: 8px;
         padding: 0.75rem 1.5rem;
         font-weight: 600;
+        color: #ffffff;
+        border: 1px solid rgba(102, 126, 234, 0.3);
     }
     
     /* Status indicators */
@@ -162,14 +168,34 @@ st.markdown("""
         font-weight: 600;
     }
     
-    /* Memory timeline */
+    /* Live indicator */
+    .live-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    /* Memory timeline - Dark theme */
     .timeline-item {
-        background: white;
+        background: rgba(26, 26, 46, 0.8);
         padding: 1rem;
         border-radius: 12px;
         margin: 0.5rem 0;
         border-left: 4px solid #667eea;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
     }
     
     /* Animations */
@@ -180,6 +206,19 @@ st.markdown("""
     
     .animate-fade-in {
         animation: fadeIn 0.5s ease-out;
+    }
+    
+    /* Text colors for dark theme */
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff !important;
+    }
+    
+    p, span, div {
+        color: #e2e8f0 !important;
+    }
+    
+    label {
+        color: #a0aec0 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -374,7 +413,7 @@ def display_emotion_result(result, user_id):
 # Professional Header
 st.markdown("""
 <div class="main-header animate-fade-in">
-    <h1>🧠 EmoMemory</h1>
+    <h1>⚡ EmoMemory</h1>
     <p>Memory-Enabled Emotion Intelligence powered by Cognee Cloud</p>
     <div class="badge">WeMakeDevs Hackathon 2025</div>
 </div>
@@ -388,6 +427,11 @@ if st.session_state.emotion_detector is None:
 # Sidebar
 with st.sidebar:
     st.header("⚙️ Settings")
+    
+    # Live indicator
+    st.markdown('<div class="live-indicator">🔴 LIVE</div>', unsafe_allow_html=True)
+    
+    st.markdown("---")
     
     # Initialize Cognee with environment variable
     if not st.session_state.cognee_initialized:
@@ -406,9 +450,9 @@ with st.sidebar:
     st.markdown("---")
     
     # Memory operations
-    st.header("🗄️ Memory Operations")
+    st.header("� Memory Operations")
     
-    if st.button("✨ Improve Memory (Cognify)"):
+    if st.button("Improve Memory"):
         if st.session_state.cognee_initialized:
             import asyncio
             with st.spinner("Building knowledge graph..."):
@@ -420,7 +464,7 @@ with st.sidebar:
         else:
             st.warning("Initialize Cognee Cloud first")
     
-    if st.button("🗑️ Forget My Data"):
+    if st.button("Forget My Data"):
         if st.session_state.cognee_initialized:
             import asyncio
             with st.spinner("Forgetting data..."):
@@ -456,7 +500,7 @@ with st.sidebar:
         st.metric("Memory Entries", memory_count)
 
 # Main content
-tab1, tab2, tab3 = st.tabs(["🎭 Analyze Emotion", "📚 Memory History", "ℹ️ About"])
+tab1, tab2, tab3 = st.tabs(["⚡ Analyze Emotion", "💾 Memory History", "📖 About"])
 
 with tab1:
     st.subheader("Multimodal Emotion Analysis")
@@ -464,17 +508,17 @@ with tab1:
     # Input type selector
     input_type = st.radio(
         "Select Input Type",
-        ["📝 Text", "🎤 Audio", "📷 Image"],
+        ["Text", "Audio", "Image"],
         horizontal=True
     )
     
-    if input_type == "📝 Text":
+    if input_type == "Text":
         text_input = st.text_area(
             "Your Message",
             placeholder="Type your message here...",
             height=150
         )
-        analyze_btn = st.button("🔍 Analyze Text Emotion", type="primary", use_container_width=True)
+        analyze_btn = st.button("Analyze Text Emotion", type="primary", use_container_width=True)
         
         if analyze_btn and text_input:
             result, error = analyze_emotion(text_input, "text", user_id)
@@ -484,9 +528,9 @@ with tab1:
             elif result:
                 display_emotion_result(result, user_id)
     
-    elif input_type == "🎤 Audio":
+    elif input_type == "Audio":
         audio_file = st.file_uploader("Upload Audio File", type=['wav', 'mp3', 'm4a'])
-        analyze_btn = st.button("🔍 Analyze Audio Emotion", type="primary", use_container_width=True)
+        analyze_btn = st.button("Analyze Audio Emotion", type="primary", use_container_width=True)
         
         if analyze_btn and audio_file:
             result, error = analyze_emotion(audio_file.name, "audio", user_id)
@@ -498,9 +542,9 @@ with tab1:
                 if "note" in result:
                     st.info(result["note"])
     
-    elif input_type == "📷 Image":
+    elif input_type == "Image":
         image_file = st.file_uploader("Upload Image", type=['png', 'jpg', 'jpeg'])
-        analyze_btn = st.button("🔍 Analyze Facial Emotion", type="primary", use_container_width=True)
+        analyze_btn = st.button("Analyze Facial Emotion", type="primary", use_container_width=True)
         
         if analyze_btn and image_file:
             result, error = analyze_emotion(image_file.name, "image", user_id)
