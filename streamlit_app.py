@@ -424,8 +424,8 @@ def display_emotion_result(result, user_id):
 st.markdown("""
 <div class="main-header animate-fade-in">
     <h1>🎯 EmoMemory</h1>
-    <p>Memory-Enabled Emotion Intelligence powered by Cognee Cloud</p>
-    <div class="badge">WeMakeDevs Hackathon 2025</div>
+    <p>Advanced AI with Persistent Memory & Emotion Intelligence</p>
+    <div class="badge">Powered by Cognee Cloud</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -589,10 +589,10 @@ with tab3:
     st.markdown("""
     <div class="emotion-card">
         <h2>About EmoMemory</h2>
-        <p>EmoMemory is a memory-enabled emotion intelligence system built for the WeMakeDevs x Cognee Hackathon.</p>
+        <p>EmoMemory is an advanced AI system with persistent memory and emotion intelligence capabilities.</p>
         
         <h3>The Problem</h3>
-        <p>Traditional LLMs and AI systems are <strong>stateless</strong>. Every request starts from scratch:</p>
+        <p>Traditional AI systems are <strong>stateless</strong>. Every request starts from scratch:</p>
         <ul>
             <li>❌ No memory of past conversations</li>
             <li>❌ Context window limits (tokens run out)</li>
@@ -628,6 +628,6 @@ with tab3:
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 0.9em;">
-    Powered by Cognee | Built with Streamlit | WeMakeDevs Hackathon 2025
+    Powered by Cognee Cloud | Built with Streamlit
 </div>
 """, unsafe_allow_html=True)
