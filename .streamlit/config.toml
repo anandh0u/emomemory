@@ -1,13 +1,17 @@
 [theme]
-primaryColor = "#667eea"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f0f2f6"
-textColor = "#262730"
-font = "sans serif"
+primaryColor      = "#7c5cfc"
+backgroundColor   = "#060612"
+secondaryBackgroundColor = "#0d0d1f"
+textColor         = "#f0f0ff"
+font              = "sans serif"
 
 [client]
-showErrorDetails = true
-maxUploadSize = 200
+showErrorDetails  = true
+maxUploadSize     = 200
 
 [logger]
 level = "info"
+
+[server]
+headless = true
+enableCORS = false
