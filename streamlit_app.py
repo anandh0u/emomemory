@@ -62,6 +62,7 @@ st.set_page_config(
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
 /* ── Root variables ── */
 :root {
@@ -111,6 +112,34 @@ html, body, .stApp {
 [data-testid="stSidebar"] * {
     color: var(--text-hi) !important;
     font-family: 'Inter', sans-serif !important;
+}
+/* Preserve Material Symbols font for icon elements */
+[data-testid="stSidebar"] .material-symbols-rounded,
+[data-testid="stSidebar"] [class*="material"],
+[data-testid="stSidebar"] span[class*="icon"] {
+    font-family: 'Material Symbols Rounded' !important;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+}
+
+/* Fix sidebar collapse/expand arrow button */
+[data-testid="collapsedControl"],
+[data-testid="stSidebarCollapsedControl"] {
+    background: rgba(124,92,252,0.15) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+}
+[data-testid="collapsedControl"] span,
+[data-testid="stSidebarCollapsedControl"] span,
+button[kind="header"] span {
+    font-family: 'Material Symbols Rounded' !important;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+    font-size: 20px !important;
+    color: var(--text-hi) !important;
+}
+
+/* Catch-all: any span that is ONLY an icon keyword — hide raw text fallback */
+span.notranslate {
+    font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
 }
 [data-testid="stSidebar"] input,
 [data-testid="stSidebar"] textarea {
