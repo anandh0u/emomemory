@@ -20,22 +20,21 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Professional custom CSS - Dark theme with custom icons
+# Professional custom CSS - Light theme with futuristic emojis
 st.markdown("""
 <style>
-    /* Global styles - Dark theme */
+    /* Global styles - Light theme */
     .stApp {
-        background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
     }
     
     /* Header styling */
     .main-header {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 2rem;
         border-radius: 16px;
         margin-bottom: 2rem;
         box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
-        border: 1px solid rgba(102, 126, 234, 0.2);
     }
     
     .main-header h1 {
@@ -47,13 +46,13 @@ st.markdown("""
     }
     
     .main-header p {
-        color: #a0aec0;
+        color: #e0e7ff;
         font-size: 1.1rem;
         margin: 0.5rem 0 0 0;
     }
     
     .main-header .badge {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: rgba(255, 255, 255, 0.2);
         color: white;
         padding: 0.5rem 1rem;
         border-radius: 20px;
@@ -61,21 +60,21 @@ st.markdown("""
         font-weight: 600;
         display: inline-block;
         margin-top: 1rem;
-    }
-    
-    /* Card styling - Dark theme */
-    .emotion-card {
-        background: rgba(26, 26, 46, 0.8);
-        padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        margin: 1rem 0;
-        border: 1px solid rgba(102, 126, 234, 0.3);
         backdrop-filter: blur(10px);
     }
     
+    /* Card styling - Light theme */
+    .emotion-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin: 1rem 0;
+        border: 1px solid #e2e8f0;
+    }
+    
     .emotion-card h2 {
-        color: #ffffff;
+        color: #1a1a2e;
         font-size: 1.8rem;
         margin: 0 0 1rem 0;
     }
@@ -89,13 +88,13 @@ st.markdown("""
         background-clip: text;
     }
     
-    /* Sidebar styling - Dark theme (more visible) */
+    /* Sidebar styling - Light theme */
     .css-1d391kg {
-        background: linear-gradient(180deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%);
-        border-right: 2px solid rgba(102, 126, 234, 0.4);
+        background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        border-right: 2px solid rgba(102, 126, 234, 0.2);
     }
     
-    /* Make sidebar text more visible */
+    /* Make sidebar text visible */
     .css-1d391kg h1, 
     .css-1d391kg h2, 
     .css-1d391kg h3,
@@ -104,15 +103,15 @@ st.markdown("""
     .css-1d391kg label,
     .css-1d391kg span,
     .css-1d391kg div {
-        color: #ffffff !important;
+        color: #1a1a2e !important;
     }
     
-    /* Make sidebar inputs more visible */
+    /* Make sidebar inputs visible */
     .css-1d391kg input,
     .css-1d391kg textarea {
-        background: rgba(26, 26, 46, 0.8) !important;
-        color: #ffffff !important;
-        border: 1px solid rgba(102, 126, 234, 0.4) !important;
+        background: white !important;
+        color: #1a1a2e !important;
+        border: 1px solid #cbd5e1 !important;
     }
     
     /* Button styling */
@@ -131,13 +130,13 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
     }
     
-    /* Input styling - Dark theme */
+    /* Input styling - Light theme */
     .stTextArea > div > div > textarea {
         border-radius: 8px;
-        border: 2px solid rgba(102, 126, 234, 0.3);
+        border: 2px solid #cbd5e1;
         padding: 1rem;
-        background: rgba(26, 26, 46, 0.5);
-        color: #ffffff;
+        background: white;
+        color: #1a1a2e;
     }
     
     .stTextArea > div > div > textarea:focus {
@@ -150,18 +149,18 @@ st.markdown("""
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
     }
     
-    /* Tab styling - Dark theme */
+    /* Tab styling - Light theme */
     .stTabs [data-baseweb="tab-list"] {
         gap: 2rem;
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(26, 26, 46, 0.5);
+        background: white;
         border-radius: 8px;
         padding: 0.75rem 1.5rem;
         font-weight: 600;
-        color: #ffffff;
-        border: 1px solid rgba(102, 126, 234, 0.3);
+        color: #1a1a2e;
+        border: 1px solid #cbd5e1;
     }
     
     /* Status indicators */
@@ -209,45 +208,78 @@ st.markdown("""
         50% { opacity: 0.8; transform: scale(1.05); }
     }
     
-    /* 3D Emoji Styling */
-    .emoji-3d {
+    /* Futuristic Emoji Styling - Neon Glow */
+    .emoji-futuristic {
         display: inline-block;
         font-size: 1.5rem;
-        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
-        transition: transform 0.3s ease, filter 0.3s ease;
-        transform-style: preserve-3d;
+        filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.8));
+        transition: all 0.3s ease;
+        animation: neonPulse 2s infinite;
     }
     
-    .emoji-3d:hover {
-        transform: rotateY(15deg) rotateX(-10deg) scale(1.1);
-        filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+    @keyframes neonPulse {
+        0%, 100% { 
+            filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.8));
+            transform: scale(1);
+        }
+        50% { 
+            filter: drop-shadow(0 0 15px rgba(102, 126, 234, 1));
+            transform: scale(1.05);
+        }
     }
     
-    /* Clay-style emoji containers */
-    .clay-emoji {
+    .emoji-futuristic:hover {
+        filter: drop-shadow(0 0 20px rgba(102, 126, 234, 1)) drop-shadow(0 0 30px rgba(118, 75, 162, 0.8));
+        transform: scale(1.2) rotate(5deg);
+    }
+    
+    /* Cyber-style emoji containers */
+    .cyber-emoji {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         width: 48px;
         height: 48px;
-        background: linear-gradient(145deg, #ffffff, #e6e6e6);
-        border-radius: 16px;
+        background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
+        border-radius: 12px;
+        border: 2px solid #667eea;
         box-shadow: 
-            8px 8px 16px rgba(0, 0, 0, 0.2),
-            -4px -4px 12px rgba(255, 255, 255, 0.1);
+            0 0 15px rgba(102, 126, 234, 0.5),
+            inset 0 0 10px rgba(102, 126, 234, 0.3);
         font-size: 1.8rem;
         transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
     
-    .clay-emoji:hover {
-        transform: translateY(-4px);
+    .cyber-emoji::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+        transform: rotate(45deg);
+        animation: cyberScan 3s infinite;
+    }
+    
+    @keyframes cyberScan {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
+    .cyber-emoji:hover {
+        border-color: #764ba2;
         box-shadow: 
-            12px 12px 20px rgba(0, 0, 0, 0.3),
-            -6px -6px 16px rgba(255, 255, 255, 0.15);
+            0 0 25px rgba(102, 126, 234, 0.8),
+            0 0 40px rgba(118, 75, 162, 0.6),
+            inset 0 0 15px rgba(102, 126, 234, 0.5);
+        transform: translateY(-4px) scale(1.1);
     }
     
-    /* 3D Badge styling */
-    .badge-3d {
+    /* Futuristic Badge styling */
+    .badge-futuristic {
         display: inline-block;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -256,28 +288,27 @@ st.markdown("""
         font-size: 0.9rem;
         font-weight: 600;
         box-shadow: 
-            0 4px 15px rgba(102, 126, 234, 0.4),
-            inset 0 2px 0 rgba(255, 255, 255, 0.2);
-        transform-style: preserve-3d;
-        transition: transform 0.3s ease;
+            0 0 20px rgba(102, 126, 234, 0.6),
+            0 0 40px rgba(118, 75, 162, 0.4);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
     
-    .badge-3d:hover {
-        transform: translateY(-2px) rotateX(5deg);
+    .badge-futuristic:hover {
         box-shadow: 
-            0 6px 20px rgba(102, 126, 234, 0.5),
-            inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            0 0 30px rgba(102, 126, 234, 0.8),
+            0 0 50px rgba(118, 75, 162, 0.6);
+        transform: translateY(-2px) scale(1.05);
     }
     
-    /* Memory timeline - Dark theme */
+    /* Memory timeline - Light theme */
     .timeline-item {
-        background: rgba(26, 26, 46, 0.8);
+        background: white;
         padding: 1rem;
         border-radius: 12px;
         margin: 0.5rem 0;
         border-left: 4px solid #667eea;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     /* Animations */
@@ -290,17 +321,17 @@ st.markdown("""
         animation: fadeIn 0.5s ease-out;
     }
     
-    /* Text colors for dark theme */
+    /* Text colors for light theme */
     h1, h2, h3, h4, h5, h6 {
-        color: #ffffff !important;
+        color: #1a1a2e !important;
     }
     
     p, span, div {
-        color: #e2e8f0 !important;
+        color: #334155 !important;
     }
     
     label {
-        color: #a0aec0 !important;
+        color: #475569 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -495,9 +526,9 @@ def display_emotion_result(result, user_id):
 # Professional Header
 st.markdown("""
 <div class="main-header animate-fade-in">
-    <h1><span class="emoji-3d">🎯</span> EmoMemory</h1>
+    <h1><span class="emoji-futuristic">🎯</span> EmoMemory</h1>
     <p>Advanced AI with Persistent Memory & Emotion Intelligence</p>
-    <div class="badge-3d">Powered by Cognee Cloud</div>
+    <div class="badge-futuristic">Powered by Cognee Cloud</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -508,10 +539,10 @@ if st.session_state.emotion_detector is None:
 
 # Sidebar
 with st.sidebar:
-    st.markdown('<h2><span class="emoji-3d">⚙️</span> Settings</h2>', unsafe_allow_html=True)
+    st.markdown('<h2><span class="emoji-futuristic">⚙️</span> Settings</h2>', unsafe_allow_html=True)
     
     # Live indicator
-    st.markdown('<div class="live-indicator"><span class="emoji-3d">🔴</span> LIVE</div>', unsafe_allow_html=True)
+    st.markdown('<div class="live-indicator"><span class="emoji-futuristic">🔴</span> LIVE</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -532,7 +563,7 @@ with st.sidebar:
     st.markdown("---")
     
     # Memory operations
-    st.markdown('<h2><span class="emoji-3d">💾</span> Memory Operations</h2>', unsafe_allow_html=True)
+    st.markdown('<h2><span class="emoji-futuristic">💾</span> Memory Operations</h2>', unsafe_allow_html=True)
     
     if st.button("🚀 Improve Memory"):
         if st.session_state.cognee_initialized:
@@ -562,20 +593,20 @@ with st.sidebar:
     st.markdown("---")
     
     # Status with professional styling
-    st.markdown('<h2><span class="emoji-3d">📊</span> System Status</h2>', unsafe_allow_html=True)
+    st.markdown('<h2><span class="emoji-futuristic">📊</span> System Status</h2>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.session_state.emotion_detector:
-            st.markdown('<div class="status-online"><span class="emoji-3d">✅</span> Model Active</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-online"><span class="emoji-futuristic">✅</span> Model Active</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="status-offline"><span class="emoji-3d">❌</span> Model Inactive</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-offline"><span class="emoji-futuristic">❌</span> Model Inactive</div>', unsafe_allow_html=True)
     
     with col2:
         if st.session_state.cognee_initialized:
-            st.markdown('<div class="status-online"><span class="emoji-3d">✅</span> Cognee Cloud</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-online"><span class="emoji-futuristic">✅</span> Cognee Cloud</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="status-offline"><span class="emoji-3d">❌</span> Cognee Offline</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-offline"><span class="emoji-futuristic">❌</span> Cognee Offline</div>', unsafe_allow_html=True)
     
     with col3:
         memory_count = len(st.session_state.memory_context.get(user_id, []))
