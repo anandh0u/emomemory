@@ -12,10 +12,11 @@ import logging
 # Configure Cognee environment before importing it
 os.environ["ENABLE_BACKEND_ACCESS_CONTROL"] = "false"
 
-# Use absolute writable directory paths for Cognee storage
-cwd = os.getcwd()
-os.environ["SYSTEM_ROOT_DIRECTORY"] = os.path.abspath(os.path.join(cwd, ".cognee_system"))
-os.environ["DATA_ROOT_DIRECTORY"]   = os.path.abspath(os.path.join(cwd, ".cognee_data"))
+# Use absolute writable temp directory paths for Cognee storage to avoid Permission Denied on Streamlit Cloud
+import tempfile
+temp_dir = tempfile.gettempdir()
+os.environ["SYSTEM_ROOT_DIRECTORY"] = os.path.abspath(os.path.join(temp_dir, ".cognee_system"))
+os.environ["DATA_ROOT_DIRECTORY"]   = os.path.abspath(os.path.join(temp_dir, ".cognee_data"))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
