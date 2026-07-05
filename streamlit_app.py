@@ -16,7 +16,10 @@ os.environ["ENABLE_BACKEND_ACCESS_CONTROL"] = "false"
 import tempfile
 temp_dir = tempfile.gettempdir()
 os.environ["SYSTEM_ROOT_DIRECTORY"] = os.path.abspath(os.path.join(temp_dir, ".cognee_system"))
+os.environ["system_root_directory"] = os.path.abspath(os.path.join(temp_dir, ".cognee_system"))
 os.environ["DATA_ROOT_DIRECTORY"]   = os.path.abspath(os.path.join(temp_dir, ".cognee_data"))
+os.environ["data_root_directory"]   = os.path.abspath(os.path.join(temp_dir, ".cognee_data"))
+os.environ["COGNEE_LOGS_DIR"]       = os.path.abspath(os.path.join(temp_dir, ".cognee_logs"))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -571,6 +574,16 @@ def initialize_models():
 def initialize_cognee():
     try:
         import cognee
+        
+        # Clear configuration caches to force picking up the environment variables
+        try:
+            from cognee.base_config import get_base_config
+            from cognee.infrastructure.databases.relational.config import get_relational_config
+            get_base_config.cache_clear()
+            get_relational_config.cache_clear()
+        except Exception as e:
+            logger.warning(f"Failed to clear cognee cache: {e}")
+            
         api_key = os.getenv("COGNEE_API_KEY")
         if not api_key:
             return False
