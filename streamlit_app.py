@@ -563,11 +563,13 @@ with tab2:
         history = st.session_state.memory_context[user_id]
         
         for i, entry in enumerate(reversed(history[-10:]), 1):
+            input_text = entry.get('input', entry.get('text', 'N/A'))
+            input_type = entry.get('type', 'text')
             st.markdown(f"""
             <div class="timeline-item animate-fade-in">
                 <strong>{entry['emotion'].upper()}</strong> ({entry['confidence']:.1%})
-                <br><small style="color: #666;">{entry['timestamp'][:19]}</small>
-                <br><em>"{entry['text']}"</em>
+                <br><small style="color: #666;">{entry['timestamp'][:19]} | {input_type.upper()}</small>
+                <br><em>"{input_text}"</em>
             </div>
             """, unsafe_allow_html=True)
     else:
