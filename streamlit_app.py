@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # Page config with professional styling
 st.set_page_config(
     page_title="EmoMemory | AI That Never Forgets",
-    page_icon="⚡",
+    page_icon="🎯",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -89,9 +89,19 @@ st.markdown("""
         background-clip: text;
     }
     
-    /* Sidebar styling - Dark theme */
+    /* Sidebar styling - Dark theme (more visible) */
     .css-1d391kg {
-        background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+        background: linear-gradient(180deg, #0a0a12 0%, #0f0f1a 100%);
+        border-right: 2px solid rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Make sidebar text more visible */
+    .css-1d391kg h1, 
+    .css-1d391kg h2, 
+    .css-1d391kg h3,
+    .css-1d391kg p,
+    .css-1d391kg label {
+        color: #ffffff !important;
     }
     
     /* Button styling */
@@ -413,7 +423,7 @@ def display_emotion_result(result, user_id):
 # Professional Header
 st.markdown("""
 <div class="main-header animate-fade-in">
-    <h1>⚡ EmoMemory</h1>
+    <h1>🎯 EmoMemory</h1>
     <p>Memory-Enabled Emotion Intelligence powered by Cognee Cloud</p>
     <div class="badge">WeMakeDevs Hackathon 2025</div>
 </div>
@@ -450,9 +460,9 @@ with st.sidebar:
     st.markdown("---")
     
     # Memory operations
-    st.header("� Memory Operations")
+    st.header("💾 Memory Operations")
     
-    if st.button("Improve Memory"):
+    if st.button("🚀 Improve Memory"):
         if st.session_state.cognee_initialized:
             import asyncio
             with st.spinner("Building knowledge graph..."):
@@ -464,7 +474,7 @@ with st.sidebar:
         else:
             st.warning("Initialize Cognee Cloud first")
     
-    if st.button("Forget My Data"):
+    if st.button("🗑️ Forget My Data"):
         if st.session_state.cognee_initialized:
             import asyncio
             with st.spinner("Forgetting data..."):
@@ -485,22 +495,22 @@ with st.sidebar:
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.session_state.emotion_detector:
-            st.markdown('<div class="status-online">✓ Model Active</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-online">✅ Model Active</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="status-offline">✗ Model Inactive</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-offline">❌ Model Inactive</div>', unsafe_allow_html=True)
     
     with col2:
         if st.session_state.cognee_initialized:
-            st.markdown('<div class="status-online">✓ Cognee Cloud</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-online">✅ Cognee Cloud</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="status-offline">✗ Cognee Offline</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-offline">❌ Cognee Offline</div>', unsafe_allow_html=True)
     
     with col3:
         memory_count = len(st.session_state.memory_context.get(user_id, []))
         st.metric("Memory Entries", memory_count)
 
 # Main content
-tab1, tab2, tab3 = st.tabs(["⚡ Analyze Emotion", "💾 Memory History", "📖 About"])
+tab1, tab2, tab3 = st.tabs(["🎯 Analyze Emotion", "💾 Memory History", "ℹ️ About"])
 
 with tab1:
     st.subheader("Multimodal Emotion Analysis")
