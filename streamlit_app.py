@@ -9,6 +9,9 @@ import os
 from datetime import datetime
 import logging
 
+# Configure Cognee environment before importing it
+os.environ["ENABLE_BACKEND_ACCESS_CONTROL"] = "false"
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -586,19 +589,19 @@ async def improve_memory():
     try:
         import cognee
         await cognee.cognify()
-        return True
+        return True, None
     except Exception as e:
         logger.error(f"Improve memory error: {e}")
-        return False
+        return False, str(e)
 
 async def forget_memory(user_id):
     try:
         import cognee
         await cognee.prune.prune_data()
-        return True
+        return True, None
     except Exception as e:
         logger.error(f"Forget error: {e}")
-        return False
+        return False, str(e)
 
 def analyze_emotion(input_data, input_type, user_id):
     if not input_data:
@@ -733,10 +736,11 @@ with st.sidebar:
             if st.session_state.cognee_initialized:
                 import asyncio
                 with st.spinner("Building knowledge graph…"):
-                    if asyncio.run(improve_memory()):
+                    success, error = asyncio.run(improve_memory())
+                    if success:
                         st.success("Memory improved!")
                     else:
-                        st.error("Failed")
+                        st.error(f"Failed: {error}")
             else:
                 st.warning("Cognee not connected")
     with col_b:
@@ -744,11 +748,12 @@ with st.sidebar:
             if st.session_state.cognee_initialized:
                 import asyncio
                 with st.spinner("Forgetting data…"):
-                    if asyncio.run(forget_memory(user_id)):
+                    success, error = asyncio.run(forget_memory(user_id))
+                    if success:
                         st.success("Forgotten!")
                         st.session_state.memory_context[user_id] = []
                     else:
-                        st.error("Failed")
+                        st.error(f"Failed: {error}")
             else:
                 st.warning("Cognee not connected")
 
