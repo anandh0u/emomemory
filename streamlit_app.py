@@ -54,6 +54,12 @@ else:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Log LLM configuration
+if _gemini_key:
+    logger.info(f"✓ Google API key detected - Cognee will use Gemini ({os.getenv('LLM_MODEL', 'gemini-2.0-flash-lite')})")
+else:
+    logger.warning("⚠ No Google API key found - Cognee will run in limited mode (no LLM)")
+
 # ── Unique Emoji Pack ── (Noto / Fluent Unicode blocks, NOT standard emoji)
 EMO_ICONS = {
     "happy":     "𝌆",   # tai xuan jing symbol (joy)
@@ -632,7 +638,7 @@ async def remember_memory(user_id, text, emotion, confidence):
 
 async def improve_memory():
     """
-    Build Cognee’s knowledge graph from stored memories.
+    Build Cognee's knowledge graph from stored memories.
     Uses Gemini (free) when GOOGLE_API_KEY is set; falls back to a
     simulated build when no LLM key is available — no OpenAI required.
     """
@@ -647,14 +653,16 @@ async def improve_memory():
             # No LLM configured — simulate the build step so the UI stays responsive
             import asyncio
             await asyncio.sleep(1.5)
-            logger.info(
+            logger.warning(
                 "improve_memory: no LLM key found. "
                 "Simulated knowledge-graph build (add GOOGLE_API_KEY to Streamlit secrets to enable real cognify)."
             )
             return True, None
 
         # We have a key — run real cognify
+        logger.info(f"Running cognify with {llm_provider} ({os.getenv('LLM_MODEL')})...")
         await cognee.cognify()
+        logger.info("✓ Knowledge graph built successfully")
         return True, None
     except Exception as e:
         logger.error(f"Improve memory error: {e}")
