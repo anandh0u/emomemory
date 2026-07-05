@@ -20,81 +20,20 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Professional custom CSS - Light theme with futuristic emojis
+# Professional Dark Theme CSS
 st.markdown("""
 <style>
-    /* Global styles - Light theme */
+    /* Global Dark Theme */
     .stApp {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+        background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
     }
     
-    /* Header styling */
-    .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
-    }
-    
-    .main-header h1 {
-        color: #ffffff;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 0;
-        letter-spacing: -0.5px;
-    }
-    
-    .main-header p {
-        color: #e0e7ff;
-        font-size: 1.1rem;
-        margin: 0.5rem 0 0 0;
-    }
-    
-    .main-header .badge {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        display: inline-block;
-        margin-top: 1rem;
-        backdrop-filter: blur(10px);
-    }
-    
-    /* Card styling - Light theme */
-    .emotion-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        margin: 1rem 0;
-        border: 1px solid #e2e8f0;
-    }
-    
-    .emotion-card h2 {
-        color: #1a1a2e;
-        font-size: 1.8rem;
-        margin: 0 0 1rem 0;
-    }
-    
-    .emotion-card .confidence {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    /* Sidebar styling - Light theme */
+    /* Sidebar - Dark with Light Text */
     .css-1d391kg {
-        background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
-        border-right: 2px solid rgba(102, 126, 234, 0.2);
+        background: linear-gradient(180deg, #0a0a12 0%, #0f0f1a 100%);
+        border-right: 2px solid rgba(102, 126, 234, 0.3);
     }
     
-    /* Make sidebar text visible */
     .css-1d391kg h1, 
     .css-1d391kg h2, 
     .css-1d391kg h3,
@@ -103,235 +42,54 @@ st.markdown("""
     .css-1d391kg label,
     .css-1d391kg span,
     .css-1d391kg div {
-        color: #1a1a2e !important;
+        color: #ffffff !important;
     }
     
-    /* Make sidebar inputs visible */
     .css-1d391kg input,
     .css-1d391kg textarea {
-        background: white !important;
-        color: #1a1a2e !important;
-        border: 1px solid #cbd5e1 !important;
+        background: rgba(26, 26, 46, 0.8) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(102, 126, 234, 0.4) !important;
     }
     
-    /* Button styling */
-    .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-    
-    /* Input styling - Light theme */
-    .stTextArea > div > div > textarea {
-        border-radius: 8px;
-        border: 2px solid #cbd5e1;
-        padding: 1rem;
-        background: white;
-        color: #1a1a2e;
-    }
-    
-    .stTextArea > div > div > textarea:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-    }
-    
-    /* Progress bar styling */
-    .stProgress > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    /* Tab styling - Light theme */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2rem;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        background: white;
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        color: #1a1a2e;
-        border: 1px solid #cbd5e1;
-    }
-    
-    /* Status indicators */
-    .status-online {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: #10b981;
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-    }
-    
-    .status-offline {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: #ef4444;
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-    }
-    
-    /* Live indicator */
-    .live-indicator {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        animation: pulse 2s infinite;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.8; transform: scale(1.05); }
-    }
-    
-    /* Futuristic Emoji Styling - Neon Glow */
-    .emoji-futuristic {
-        display: inline-block;
-        font-size: 1.5rem;
-        filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.8));
-        transition: all 0.3s ease;
-        animation: neonPulse 2s infinite;
-    }
-    
-    @keyframes neonPulse {
-        0%, 100% { 
-            filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.8));
-            transform: scale(1);
-        }
-        50% { 
-            filter: drop-shadow(0 0 15px rgba(102, 126, 234, 1));
-            transform: scale(1.05);
-        }
-    }
-    
-    .emoji-futuristic:hover {
-        filter: drop-shadow(0 0 20px rgba(102, 126, 234, 1)) drop-shadow(0 0 30px rgba(118, 75, 162, 0.8));
-        transform: scale(1.2) rotate(5deg);
-    }
-    
-    /* Cyber-style emoji containers */
-    .cyber-emoji {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
-        border-radius: 12px;
-        border: 2px solid #667eea;
-        box-shadow: 
-            0 0 15px rgba(102, 126, 234, 0.5),
-            inset 0 0 10px rgba(102, 126, 234, 0.3);
-        font-size: 1.8rem;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .cyber-emoji::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.3), transparent);
-        transform: rotate(45deg);
-        animation: cyberScan 3s infinite;
-    }
-    
-    @keyframes cyberScan {
-        0% { transform: translateX(-100%) rotate(45deg); }
-        100% { transform: translateX(100%) rotate(45deg); }
-    }
-    
-    .cyber-emoji:hover {
-        border-color: #764ba2;
-        box-shadow: 
-            0 0 25px rgba(102, 126, 234, 0.8),
-            0 0 40px rgba(118, 75, 162, 0.6),
-            inset 0 0 15px rgba(102, 126, 234, 0.5);
-        transform: translateY(-4px) scale(1.1);
-    }
-    
-    /* Futuristic Badge styling */
-    .badge-futuristic {
-        display: inline-block;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 25px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        box-shadow: 
-            0 0 20px rgba(102, 126, 234, 0.6),
-            0 0 40px rgba(118, 75, 162, 0.4);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    
-    .badge-futuristic:hover {
-        box-shadow: 
-            0 0 30px rgba(102, 126, 234, 0.8),
-            0 0 50px rgba(118, 75, 162, 0.6);
-        transform: translateY(-2px) scale(1.05);
-    }
-    
-    /* Memory timeline - Light theme */
-    .timeline-item {
-        background: white;
-        padding: 1rem;
-        border-radius: 12px;
-        margin: 0.5rem 0;
-        border-left: 4px solid #667eea;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    /* Animations */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .animate-fade-in {
-        animation: fadeIn 0.5s ease-out;
-    }
-    
-    /* Text colors for light theme */
+    /* Main Content - Dark Theme */
     h1, h2, h3, h4, h5, h6 {
-        color: #1a1a2e !important;
+        color: #ffffff !important;
     }
     
     p, span, div {
-        color: #334155 !important;
+        color: #e2e8f0 !important;
     }
     
     label {
-        color: #475569 !important;
+        color: #a0aec0 !important;
+    }
+    
+    /* Cards - Dark */
+    .stCard {
+        background: rgba(26, 26, 46, 0.8);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Inputs - Dark */
+    .stTextArea > div > div > textarea,
+    .stTextInput > div > div > input {
+        background: rgba(26, 26, 46, 0.8);
+        color: #ffffff;
+        border: 1px solid rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Buttons - Dark Theme */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    /* Tabs - Dark */
+    .stTabs [data-baseweb="tab"] {
+        background: rgba(26, 26, 46, 0.8);
+        color: #ffffff;
+        border: 1px solid rgba(102, 126, 234, 0.4);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -523,12 +281,12 @@ def display_emotion_result(result, user_id):
     if memory_count > 0:
         st.success(f"🧠 Memory Context Active - {memory_count} past interaction(s) stored")
 
-# Professional Header
+# Professional Header - Dark Theme
 st.markdown("""
-<div class="main-header animate-fade-in">
-    <h1><span class="emoji-futuristic">🎯</span> EmoMemory</h1>
-    <p>Advanced AI with Persistent Memory & Emotion Intelligence</p>
-    <div class="badge-futuristic">Powered by Cognee Cloud</div>
+<div style="padding: 2rem; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(102, 126, 234, 0.3);">
+    <h1 style="font-size: 2.5rem; font-weight: 700; color: #ffffff; margin: 0;">🎯 EmoMemory</h1>
+    <p style="color: #a0aec0; font-size: 1.1rem; margin: 0.5rem 0 0 0;">Advanced AI with Persistent Memory & Emotion Intelligence</p>
+    <div style="margin-top: 1rem; display: inline-block; background: rgba(102, 126, 234, 0.3); padding: 0.5rem 1rem; border-radius: 20px; color: #ffffff; font-size: 0.85rem; font-weight: 600;">Powered by Cognee Cloud</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -539,10 +297,10 @@ if st.session_state.emotion_detector is None:
 
 # Sidebar
 with st.sidebar:
-    st.markdown('<h2><span class="emoji-futuristic">⚙️</span> Settings</h2>', unsafe_allow_html=True)
+    st.markdown("### ⚙️ Settings")
     
     # Live indicator
-    st.markdown('<div class="live-indicator"><span class="emoji-futuristic">🔴</span> LIVE</div>', unsafe_allow_html=True)
+    st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">🔴 LIVE</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -563,7 +321,7 @@ with st.sidebar:
     st.markdown("---")
     
     # Memory operations
-    st.markdown('<h2><span class="emoji-futuristic">💾</span> Memory Operations</h2>', unsafe_allow_html=True)
+    st.markdown("### 💾 Memory Operations")
     
     if st.button("🚀 Improve Memory"):
         if st.session_state.cognee_initialized:
@@ -593,20 +351,20 @@ with st.sidebar:
     st.markdown("---")
     
     # Status with professional styling
-    st.markdown('<h2><span class="emoji-futuristic">📊</span> System Status</h2>', unsafe_allow_html=True)
+    st.markdown("### 📊 System Status")
     
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.session_state.emotion_detector:
-            st.markdown('<div class="status-online"><span class="emoji-futuristic">✅</span> Model Active</div>', unsafe_allow_html=True)
+            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">✅ Model Active</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="status-offline"><span class="emoji-futuristic">❌</span> Model Inactive</div>', unsafe_allow_html=True)
+            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">❌ Model Inactive</div>', unsafe_allow_html=True)
     
     with col2:
         if st.session_state.cognee_initialized:
-            st.markdown('<div class="status-online"><span class="emoji-futuristic">✅</span> Cognee Cloud</div>', unsafe_allow_html=True)
+            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">✅ Cognee Cloud</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="status-offline"><span class="emoji-futuristic">❌</span> Cognee Offline</div>', unsafe_allow_html=True)
+            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">❌ Cognee Offline</div>', unsafe_allow_html=True)
     
     with col3:
         memory_count = len(st.session_state.memory_context.get(user_id, []))
