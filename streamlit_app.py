@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # Page config with professional styling
 st.set_page_config(
     page_title="EmoMemory | AI That Never Forgets",
-    page_icon="🎯",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -29,27 +29,32 @@ st.markdown("""
     }
     
     /* Sidebar - Dark with Light Text */
-    .css-1d391kg {
-        background: linear-gradient(180deg, #0a0a12 0%, #0f0f1a 100%);
-        border-right: 2px solid rgba(102, 126, 234, 0.3);
+    .stSidebar,
+    .css-1d391kg,
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0a0a12 0%, #0f0f1a 100%) !important;
+        border-right: 2px solid rgba(102, 126, 234, 0.3) !important;
     }
     
-    .css-1d391kg h1, 
-    .css-1d391kg h2, 
-    .css-1d391kg h3,
-    .css-1d391kg h4,
-    .css-1d391kg p,
-    .css-1d391kg label,
-    .css-1d391kg span,
-    .css-1d391kg div {
+    .stSidebar *,
+    .css-1d391kg *,
+    [data-testid="stSidebar"] * {
         color: #ffffff !important;
     }
     
+    .stSidebar input,
+    .stSidebar textarea,
     .css-1d391kg input,
     .css-1d391kg textarea {
         background: rgba(26, 26, 46, 0.8) !important;
         color: #ffffff !important;
         border: 1px solid rgba(102, 126, 234, 0.4) !important;
+    }
+    
+    .stSidebar button,
+    .css-1d391kg button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
     }
     
     /* Main Content - Dark Theme */
@@ -279,12 +284,12 @@ def display_emotion_result(result, user_id):
     # Memory context
     memory_count = len(st.session_state.memory_context.get(user_id, []))
     if memory_count > 0:
-        st.success(f"🧠 Memory Context Active - {memory_count} past interaction(s) stored")
+        st.success(f"Memory Context Active - {memory_count} past interaction(s) stored")
 
 # Professional Header - Dark Theme
 st.markdown("""
 <div style="padding: 2rem; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(102, 126, 234, 0.3);">
-    <h1 style="font-size: 2.5rem; font-weight: 700; color: #ffffff; margin: 0;">🎯 EmoMemory</h1>
+    <h1 style="font-size: 2.5rem; font-weight: 700; color: #ffffff; margin: 0;">EmoMemory</h1>
     <p style="color: #a0aec0; font-size: 1.1rem; margin: 0.5rem 0 0 0;">Advanced AI with Persistent Memory & Emotion Intelligence</p>
     <div style="margin-top: 1rem; display: inline-block; background: rgba(102, 126, 234, 0.3); padding: 0.5rem 1rem; border-radius: 20px; color: #ffffff; font-size: 0.85rem; font-weight: 600;">Powered by Cognee Cloud</div>
 </div>
@@ -297,10 +302,10 @@ if st.session_state.emotion_detector is None:
 
 # Sidebar
 with st.sidebar:
-    st.markdown("### ⚙️ Settings")
+    st.markdown("### Settings")
     
     # Live indicator
-    st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">🔴 LIVE</div>', unsafe_allow_html=True)
+    st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">LIVE</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -321,9 +326,9 @@ with st.sidebar:
     st.markdown("---")
     
     # Memory operations
-    st.markdown("### 💾 Memory Operations")
+    st.markdown("### Memory Operations")
     
-    if st.button("🚀 Improve Memory"):
+    if st.button("Improve Memory"):
         if st.session_state.cognee_initialized:
             import asyncio
             with st.spinner("Building knowledge graph..."):
@@ -335,7 +340,7 @@ with st.sidebar:
         else:
             st.warning("Initialize Cognee Cloud first")
     
-    if st.button("🗑️ Forget My Data"):
+    if st.button("Forget My Data"):
         if st.session_state.cognee_initialized:
             import asyncio
             with st.spinner("Forgetting data..."):
@@ -351,27 +356,27 @@ with st.sidebar:
     st.markdown("---")
     
     # Status with professional styling
-    st.markdown("### 📊 System Status")
+    st.markdown("### System Status")
     
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.session_state.emotion_detector:
-            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">✅ Model Active</div>', unsafe_allow_html=True)
+            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Active</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">❌ Model Inactive</div>', unsafe_allow_html=True)
+            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Inactive</div>', unsafe_allow_html=True)
     
     with col2:
         if st.session_state.cognee_initialized:
-            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">✅ Cognee Cloud</div>', unsafe_allow_html=True)
+            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Connected</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">❌ Cognee Offline</div>', unsafe_allow_html=True)
+            st.markdown('<div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Offline</div>', unsafe_allow_html=True)
     
     with col3:
         memory_count = len(st.session_state.memory_context.get(user_id, []))
         st.metric("Memory Entries", memory_count)
 
 # Main content
-tab1, tab2, tab3 = st.tabs(["🎯 Analyze", "💾 History", "ℹ️ About"])
+tab1, tab2, tab3 = st.tabs(["Analyze", "History", "About"])
 
 with tab1:
     st.subheader("Multimodal Emotion Analysis")
