@@ -35,6 +35,19 @@ env/
 
 # Third party packages with setup.py
 third_party/
+third_party.backup/
+
+# Backup files
+*.backup
+*_backup
+
+# Multiple requirements files (keep only requirements.txt for Streamlit Cloud)
+requirements-agents.txt
+requirements-core.txt
+requirements.txt.full
+requirements_hf.txt
+requirements_minimal.txt
+requirements_streamlit.txt
 
 # IDE
 .vscode/
