@@ -229,6 +229,10 @@ def initialize_cognee():
         logger.info("Cognee Cloud initialized successfully")
         return True
         
+    except ImportError:
+        logger.warning("Cognee not installed - using local memory only")
+        st.info("⚠️ Cognee not installed - using local memory only")
+        return False
     except Exception as e:
         logger.error(f"Failed to initialize Cognee: {e}")
         st.error(f"Failed to initialize Cognee: {e}")
