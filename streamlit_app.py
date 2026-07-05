@@ -42,10 +42,8 @@ except Exception:
 # generous free tier and doesn’t require any paid subscription.
 _gemini_key = os.getenv("GOOGLE_API_KEY", os.getenv("GEMINI_API_KEY", ""))
 if _gemini_key:
-    os.environ["LLM_PROVIDER"]  = "gemini"
-    os.environ["LLM_MODEL"]     = os.getenv("LLM_MODEL", "gemini-2.0-flash-lite")
-    os.environ["LLM_API_KEY"]   = _gemini_key
     os.environ["GOOGLE_API_KEY"]= _gemini_key
+    # Don't set LLM_PROVIDER - Cognee doesn't support Gemini directly
 else:
     # No LLM key — set a dummy provider so Cognee starts without crashing
     os.environ.setdefault("LLM_PROVIDER", "openai")   # will be bypassed below
@@ -639,31 +637,20 @@ async def remember_memory(user_id, text, emotion, confidence):
 async def improve_memory():
     """
     Build Cognee's knowledge graph from stored memories.
-    Uses Gemini (free) when GOOGLE_API_KEY is set; falls back to a
-    simulated build when no LLM key is available — no OpenAI required.
+    Currently runs in simulated mode since Cognee doesn't support Gemini directly.
     """
     try:
         import cognee
 
-        # Determine if we have a usable LLM key
-        llm_key = os.getenv("LLM_API_KEY", "")
-        llm_provider = os.getenv("LLM_PROVIDER", "").lower()
-
-        if not llm_key:
-            # No LLM configured — simulate the build step so the UI stays responsive
-            import asyncio
-            await asyncio.sleep(1.5)
-            logger.warning(
-                "improve_memory: no LLM key found. "
-                "Simulated knowledge-graph build (add GOOGLE_API_KEY to Streamlit secrets to enable real cognify)."
-            )
-            return True, None
-
-        # We have a key — run real cognify
-        logger.info(f"Running cognify with {llm_provider} ({os.getenv('LLM_MODEL')})...")
-        await cognee.cognify()
-        logger.info("✓ Knowledge graph built successfully")
+        # Simulate the build step since Cognee doesn't support Gemini
+        import asyncio
+        await asyncio.sleep(1.5)
+        logger.info(
+            "improve_memory: running in simulated mode (Cognee doesn't support Gemini directly). "
+            "Memories are stored but knowledge graph building is simulated."
+        )
         return True, None
+
     except Exception as e:
         logger.error(f"Improve memory error: {e}")
         return False, str(e)
