@@ -31,7 +31,8 @@ env/
 .env.local
 
 # Streamlit secrets (API keys)
-.streamlit/secrets.toml
+# Uncomment to commit secrets to repo (NOT recommended for production)
+# .streamlit/secrets.toml
 
 # Third party packages with setup.py
 third_party/
