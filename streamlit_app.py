@@ -42,7 +42,7 @@ except Exception:
 # generous free tier and doesn’t require any paid subscription.
 _gemini_key = os.getenv("GOOGLE_API_KEY", os.getenv("GEMINI_API_KEY", ""))
 if _gemini_key:
-    os.environ["LLM_PROVIDER"]  = "google"
+    os.environ["LLM_PROVIDER"]  = "gemini"
     os.environ["LLM_MODEL"]     = os.getenv("LLM_MODEL", "gemini-2.0-flash-lite")
     os.environ["LLM_API_KEY"]   = _gemini_key
     os.environ["GOOGLE_API_KEY"]= _gemini_key
