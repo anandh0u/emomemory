@@ -58,10 +58,7 @@ requirements_streamlit.txt
 
 # Logs
 *.log
-debug.log
-cf_live.log
-cloudflared.log
-cloudflared.err
+*.err
 
 # Database
 *.db
@@ -87,7 +84,7 @@ desktop.ini
 *.tmp
 *.bak
 *.swp
-cf_out.txt
+*.txt
 
 # Jupyter Notebooks
 .ipynb_checkpoints/
@@ -101,3 +98,49 @@ htmlcov/
 # Documentation builds
 docs/_build/
 site/
+
+# Unwanted directories
+frontend/
+fusion/
+pip_cache/
+reports/
+scripts/
+tools/
+hf_space/
+.devcontainer/
+
+# Unwanted Python files
+all_in_one.py
+api.py
+app.py
+auth.py
+backend_api.py
+chat_interface.py
+cognee_integration.py
+config.py
+database.py
+demo_window.py
+deploy.py
+frontend_app.py
+grab_url.py
+hf_app.py
+inference.py
+keep_tunnel.py
+launch_tunnel.py
+memory_emotion_agent.py
+run_tunnel.py
+start_cf.py
+start_tunnel.py
+train.py
+train_animated.py
+train_animated_search.py
+train_fer.py
+train_fer_cnn.py
+train_mosei_binary.py
+train_mosei_binary_search.py
+train_savee.py
+train_savee_7class_search.py
+train_savee_catboost.py
+train_savee_search.py
+web_demo.py
+evaluate.py
