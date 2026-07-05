@@ -33,6 +33,9 @@ env/
 # Streamlit secrets (API keys)
 .streamlit/secrets.toml
 
+# Third party packages with setup.py
+third_party/
+
 # IDE
 .vscode/
 .idea/
