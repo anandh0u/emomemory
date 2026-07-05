@@ -12,7 +12,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class TextEmotionDetector:
-    """Text Emotion Detection using HuggingFace transformers."""
+    """Text Emotion Detection using HuggingFace transformers - emo1 model."""
 
     # Emotion labels for common datasets
     EMOTIONS = ["sadness", "joy", "love", "anger", "fear", "surprise"]
@@ -21,7 +21,7 @@ class TextEmotionDetector:
     EMOTIONS_ALT = ["happy", "sad", "angry", "fear", "disgust", "surprise", "neutral"]
 
     def __init__(self, device: str | None = None, model_name: str = "j-hartmann/emotion-english-distilroberta-base"):
-        """Initialize text emotion detector.
+        """Initialize text emotion detector - emo1 model.
         
         Args:
             device: Device to run model on (cuda/cpu)

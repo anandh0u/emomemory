@@ -12,13 +12,13 @@ LOGGER = logging.getLogger(__name__)
 
 
 class SpeechEmotionRecognizer:
-    """Speech Emotion Recognition using HuggingFace transformers."""
+    """Speech Emotion Recognition using HuggingFace transformers - emo1 model."""
 
     # Emotion labels for common datasets
     EMOTIONS = ["neutral", "calm", "happy", "sad", "angry", "fearful", "disgust", "surprised"]
 
     def __init__(self, device: str | None = None, model_name: str = "ehcalabres/wav2vec2-lg-xlsr-en-speech-emotion-recognition"):
-        """Initialize speech emotion detector.
+        """Initialize speech emotion detector - emo1 model.
         
         Args:
             device: Device to run model on (cuda/cpu)
@@ -79,16 +79,81 @@ class SpeechEmotionRecognizer:
             import torch
             import numpy as np
             
-            # For now, return mock result since librosa is not available in Streamlit Cloud
-            # In production, would use librosa to load audio
-            LOGGER.warning("Speech emotion requires librosa - returning mock result for demo")
-            
-            return {
-                "emotion": "neutral",
-                "confidence": 0.5,
-                "all_emotions": {e: 0.125 for e in self.EMOTIONS},
-                "note": "Speech emotion requires librosa - not available in Streamlit Cloud"
-            }
+            # Try to load audio with librosa if available
+            try:
+                import librosa
+                import soundfile as sf
+                
+                # Load audio file
+                audio, sr = librosa.load(audio_path, sr=16000)
+                
+                # Extract features
+                inputs = self.feature_extractor(audio, sampling_rate=sr, return_tensors="pt")
+                inputs = {k: v.to(self.device) for k, v in inputs.items()}
+                
+                # Predict
+                with torch.no_grad():
+                    outputs = self.model(**inputs)
+                    logits = outputs.logits
+                    probabilities = torch.softmax(logits, dim=-1)
+                
+                # Get results
+                probs = probabilities[0].cpu().numpy()
+                predicted_class = int(np.argmax(probs))
+                confidence = float(probs[predicted_class])
+                
+                # Map to emotion labels
+                id2label = self.model.config.id2label
+                emotion = id2label[predicted_class]
+                
+                # Create all emotions dict
+                all_emotions = {id2label[i]: float(probs[i]) for i in range(len(probs))}
+                
+                return {
+                    "emotion": emotion,
+                    "confidence": confidence,
+                    "all_emotions": all_emotions
+                }
+                
+            except ImportError:
+                LOGGER.warning("librosa not available - using torch audio loading")
+                # Fallback: use torch audio if librosa not available
+                import torchaudio
+                waveform, sample_rate = torchaudio.load(audio_path)
+                
+                # Resample if needed
+                if sample_rate != 16000:
+                    resampler = torchaudio.transforms.Resample(sample_rate, 16000)
+                    waveform = resampler(waveform)
+                    sample_rate = 16000
+                
+                # Extract features
+                inputs = self.feature_extractor(waveform.squeeze().numpy(), sampling_rate=sample_rate, return_tensors="pt")
+                inputs = {k: v.to(self.device) for k, v in inputs.items()}
+                
+                # Predict
+                with torch.no_grad():
+                    outputs = self.model(**inputs)
+                    logits = outputs.logits
+                    probabilities = torch.softmax(logits, dim=-1)
+                
+                # Get results
+                probs = probabilities[0].cpu().numpy()
+                predicted_class = int(np.argmax(probs))
+                confidence = float(probs[predicted_class])
+                
+                # Map to emotion labels
+                id2label = self.model.config.id2label
+                emotion = id2label[predicted_class]
+                
+                # Create all emotions dict
+                all_emotions = {id2label[i]: float(probs[i]) for i in range(len(probs))}
+                
+                return {
+                    "emotion": emotion,
+                    "confidence": confidence,
+                    "all_emotions": all_emotions
+                }
             
         except Exception as e:
             LOGGER.error(f"Error predicting speech emotion: {e}")

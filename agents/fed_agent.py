@@ -12,13 +12,13 @@ LOGGER = logging.getLogger(__name__)
 
 
 class FacialEmotionDetector:
-    """Facial Emotion Detection using HuggingFace transformers."""
+    """Facial Emotion Detection using HuggingFace transformers - emo1 model."""
 
     # Emotion labels for common datasets
     EMOTIONS = ["angry", "disgust", "fear", "happy", "sad", "surprise", "neutral"]
 
-    def __init__(self, device: str | None = None, model_name: str = "trinet-fer2018"):
-        """Initialize facial emotion detector.
+    def __init__(self, device: str | None = None, model_name: str = "dima806/facial_emotions_image_detection"):
+        """Initialize facial emotion detector - emo1 model.
         
         Args:
             device: Device to run model on (cuda/cpu)
@@ -45,13 +45,12 @@ class FacialEmotionDetector:
             
             LOGGER.info(f"Loading facial emotion model: {self.model_name}")
             
-            # For demo, use a simpler approach since full facial emotion models are heavy
-            # In production, would load: self.feature_extractor = AutoImageProcessor.from_pretrained(self.model_name)
-            # self.model = AutoModelForImageClassification.from_pretrained(self.model_name)
-            # self.model.to(self.device)
-            # self.model.eval()
+            self.feature_extractor = AutoImageProcessor.from_pretrained(self.model_name)
+            self.model = AutoModelForImageClassification.from_pretrained(self.model_name)
+            self.model.to(self.device)
+            self.model.eval()
             
-            LOGGER.info("Facial emotion model loaded (demo mode)")
+            LOGGER.info("Facial emotion model loaded successfully")
             
         except ImportError as e:
             LOGGER.error(f"Failed to load transformers: {e}")
@@ -77,23 +76,39 @@ class FacialEmotionDetector:
             }
         
         try:
-            # For demo, return mock result since full facial emotion models are heavy
-            # In production, would use the loaded model
-            LOGGER.warning("Facial emotion requires full model - returning mock result for demo")
+            from PIL import Image
+            import torch
+            import numpy as np
+            
+            # Load image
+            image = Image.open(image_path).convert("RGB")
+            
+            # Process image
+            inputs = self.feature_extractor(image, return_tensors="pt")
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
+            # Predict
+            with torch.no_grad():
+                outputs = self.model(**inputs)
+                logits = outputs.logits
+                probabilities = torch.softmax(logits, dim=-1)
+            
+            # Get results
+            probs = probabilities[0].cpu().numpy()
+            predicted_class = int(np.argmax(probs))
+            confidence = float(probs[predicted_class])
+            
+            # Map to emotion labels
+            id2label = self.model.config.id2label
+            emotion = id2label[predicted_class]
+            
+            # Create all emotions dict
+            all_emotions = {id2label[i]: float(probs[i]) for i in range(len(probs))}
             
             return {
-                "emotion": "happy",
-                "confidence": 0.75,
-                "all_emotions": {
-                    "happy": 0.75,
-                    "neutral": 0.15,
-                    "sad": 0.05,
-                    "angry": 0.02,
-                    "fear": 0.01,
-                    "disgust": 0.01,
-                    "surprise": 0.01
-                },
-                "note": "Facial emotion requires full model - not available in Streamlit Cloud"
+                "emotion": emotion,
+                "confidence": confidence,
+                "all_emotions": all_emotions
             }
             
         except Exception as e:
