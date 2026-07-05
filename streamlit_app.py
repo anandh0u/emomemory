@@ -214,19 +214,21 @@ def initialize_models():
         return False
 
 def initialize_cognee():
-    """Initialize Cognee Cloud with API key."""
+    """Initialize Cognee Cloud with API key from environment variable."""
     try:
         import cognee
         
         api_key = os.getenv("COGNEE_API_KEY")
         if not api_key:
-            st.warning("⚠️ COGNEE_API_KEY not set. Using local mode.")
+            logger.warning("COGNEE_API_KEY not set in environment. Using local memory only.")
+            st.info("⚠️ Cognee Cloud not configured - using local memory")
             return False
         
         # Configure Cognee Cloud
         cognee.config.set_api_key(api_key)
         st.session_state.cognee_initialized = True
         logger.info("Cognee Cloud initialized successfully")
+        st.success("✓ Cognee Cloud connected")
         return True
         
     except ImportError:
@@ -235,7 +237,7 @@ def initialize_cognee():
         return False
     except Exception as e:
         logger.error(f"Failed to initialize Cognee: {e}")
-        st.error(f"Failed to initialize Cognee: {e}")
+        st.warning(f"⚠️ Cognee initialization failed: {e}")
         return False
 
 async def remember_memory(user_id: str, text: str, emotion: str, confidence: float):
@@ -385,16 +387,8 @@ if st.session_state.emotion_detector is None:
 with st.sidebar:
     st.header("⚙️ Settings")
     
-    # Cognee API Key
-    api_key = st.text_input(
-        "Cognee API Key",
-        type="password",
-        placeholder="Enter your COGNEE-35 free credit key",
-        help="Get free credit at: https://cognee.ai with code COGNEE-35"
-    )
-    
-    if api_key and not st.session_state.cognee_initialized:
-        os.environ["COGNEE_API_KEY"] = api_key
+    # Initialize Cognee with environment variable
+    if not st.session_state.cognee_initialized:
         with st.spinner("Initializing Cognee Cloud..."):
             initialize_cognee()
     
