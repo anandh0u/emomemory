@@ -190,11 +190,72 @@ st.markdown("""
         font-size: 0.85rem;
         font-weight: 600;
         animation: pulse 2s infinite;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
     
     @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    
+    /* 3D Emoji Styling */
+    .emoji-3d {
+        display: inline-block;
+        font-size: 1.5rem;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+        transition: transform 0.3s ease, filter 0.3s ease;
+        transform-style: preserve-3d;
+    }
+    
+    .emoji-3d:hover {
+        transform: rotateY(15deg) rotateX(-10deg) scale(1.1);
+        filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+    }
+    
+    /* Clay-style emoji containers */
+    .clay-emoji {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(145deg, #ffffff, #e6e6e6);
+        border-radius: 16px;
+        box-shadow: 
+            8px 8px 16px rgba(0, 0, 0, 0.2),
+            -4px -4px 12px rgba(255, 255, 255, 0.1);
+        font-size: 1.8rem;
+        transition: all 0.3s ease;
+    }
+    
+    .clay-emoji:hover {
+        transform: translateY(-4px);
+        box-shadow: 
+            12px 12px 20px rgba(0, 0, 0, 0.3),
+            -6px -6px 16px rgba(255, 255, 255, 0.15);
+    }
+    
+    /* 3D Badge styling */
+    .badge-3d {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        box-shadow: 
+            0 4px 15px rgba(102, 126, 234, 0.4),
+            inset 0 2px 0 rgba(255, 255, 255, 0.2);
+        transform-style: preserve-3d;
+        transition: transform 0.3s ease;
+    }
+    
+    .badge-3d:hover {
+        transform: translateY(-2px) rotateX(5deg);
+        box-shadow: 
+            0 6px 20px rgba(102, 126, 234, 0.5),
+            inset 0 2px 0 rgba(255, 255, 255, 0.3);
     }
     
     /* Memory timeline - Dark theme */
@@ -423,9 +484,9 @@ def display_emotion_result(result, user_id):
 # Professional Header
 st.markdown("""
 <div class="main-header animate-fade-in">
-    <h1>🎯 EmoMemory</h1>
+    <h1><span class="emoji-3d">🎯</span> EmoMemory</h1>
     <p>Advanced AI with Persistent Memory & Emotion Intelligence</p>
-    <div class="badge">Powered by Cognee Cloud</div>
+    <div class="badge-3d">Powered by Cognee Cloud</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -436,10 +497,10 @@ if st.session_state.emotion_detector is None:
 
 # Sidebar
 with st.sidebar:
-    st.header("⚙️ Settings")
+    st.markdown('<h2><span class="emoji-3d">⚙️</span> Settings</h2>', unsafe_allow_html=True)
     
     # Live indicator
-    st.markdown('<div class="live-indicator">🔴 LIVE</div>', unsafe_allow_html=True)
+    st.markdown('<div class="live-indicator"><span class="emoji-3d">🔴</span> LIVE</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -460,7 +521,7 @@ with st.sidebar:
     st.markdown("---")
     
     # Memory operations
-    st.header("💾 Memory Operations")
+    st.markdown('<h2><span class="emoji-3d">💾</span> Memory Operations</h2>', unsafe_allow_html=True)
     
     if st.button("🚀 Improve Memory"):
         if st.session_state.cognee_initialized:
@@ -490,27 +551,27 @@ with st.sidebar:
     st.markdown("---")
     
     # Status with professional styling
-    st.header("📊 System Status")
+    st.markdown('<h2><span class="emoji-3d">📊</span> System Status</h2>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.session_state.emotion_detector:
-            st.markdown('<div class="status-online">✅ Model Active</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-online"><span class="emoji-3d">✅</span> Model Active</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="status-offline">❌ Model Inactive</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-offline"><span class="emoji-3d">❌</span> Model Inactive</div>', unsafe_allow_html=True)
     
     with col2:
         if st.session_state.cognee_initialized:
-            st.markdown('<div class="status-online">✅ Cognee Cloud</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-online"><span class="emoji-3d">✅</span> Cognee Cloud</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="status-offline">❌ Cognee Offline</div>', unsafe_allow_html=True)
+            st.markdown('<div class="status-offline"><span class="emoji-3d">❌</span> Cognee Offline</div>', unsafe_allow_html=True)
     
     with col3:
         memory_count = len(st.session_state.memory_context.get(user_id, []))
         st.metric("Memory Entries", memory_count)
 
 # Main content
-tab1, tab2, tab3 = st.tabs(["🎯 Analyze Emotion", "💾 Memory History", "ℹ️ About"])
+tab1, tab2, tab3 = st.tabs(["🎯 Analyze", "💾 History", "ℹ️ About"])
 
 with tab1:
     st.subheader("Multimodal Emotion Analysis")
