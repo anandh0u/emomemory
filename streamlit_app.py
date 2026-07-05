@@ -115,71 +115,80 @@ html, body, .stApp {
 }
 
 /* ═══════════════════════════════════════════════════════
-   NUCLEAR FIX: Sidebar collapse arrow "keyboard_double_arrow_left"
-   The Material Symbols font may be blocked by CSP on Streamlit Cloud.
-   Strategy: zero out the raw text with font-size:0, then inject a
-   real arrow character via ::before using system fonts.
+   BULLETPROOF FIX: Sidebar collapse arrow "keyboard_double_arrow_left"
+   We completely hide all child elements/text of collapse buttons,
+   then render a custom Unicode arrow in the pseudo-element.
    ═══════════════════════════════════════════════════════ */
 
-/* 1. Hide the raw broken icon text globally */
-.material-symbols-rounded {
-    font-family: 'Material Symbols Rounded', sans-serif !important;
-    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24 !important;
-    font-size: 0 !important;      /* hide raw text */
-    line-height: 0 !important;
+/* 1. Hide all inner contents (text / icons) of Streamlit collapse/expand buttons */
+[data-testid="stSidebarCollapseButton"] button *,
+[data-testid="stSidebarCollapsedControl"] button *,
+[data-testid="collapsedControl"] button *,
+button[aria-label*="sidebar"] *,
+button[aria-label*="Sidebar"] *,
+button[aria-label*="Close"] *,
+button[aria-label*="Open"] * {
+    display: none !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* 2. Style the buttons and inject custom Unicode arrow */
+[data-testid="stSidebarCollapseButton"] button,
+button[aria-label*="Close"] {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 24px !important;
-    height: 24px !important;
-    overflow: hidden !important;
-}
-
-/* 2. Inject a system-font arrow for the sidebar collapse icon */
-[data-testid="stSidebarCollapseButton"] .material-symbols-rounded::before,
-[data-testid="stSidebarCollapsedControl"] .material-symbols-rounded::before,
-[data-testid="collapsedControl"] .material-symbols-rounded::before,
-button[aria-label*="sidebar"] .material-symbols-rounded::before,
-button[aria-label*="Sidebar"] .material-symbols-rounded::before,
-button[aria-label*="Close"] .material-symbols-rounded::before,
-button[aria-label*="Open"] .material-symbols-rounded::before {
-    content: "❮";
-    font-size: 15px !important;
-    font-family: 'Inter', Arial, sans-serif !important;
-    color: var(--text-hi) !important;
-    line-height: 1 !important;
-    display: block !important;
-}
-
-/* 3. Collapsed state arrow points right */
-[data-testid="stSidebarCollapsedControl"] .material-symbols-rounded::before,
-[data-testid="collapsedControl"] .material-symbols-rounded::before {
-    content: "❯" !important;
-}
-
-/* 4. Style the collapse button itself */
-[data-testid="stSidebarCollapseButton"] button,
-[data-testid="stSidebarCollapsedControl"] button,
-[data-testid="collapsedControl"] button {
     background: rgba(124,92,252,0.15) !important;
     border: 1px solid var(--border) !important;
     border-radius: 8px !important;
     width: 36px !important;
     height: 36px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: background 0.2s ease !important;
+    cursor: pointer !important;
+    position: relative !important;
 }
-[data-testid="stSidebarCollapseButton"] button:hover,
-[data-testid="stSidebarCollapsedControl"] button:hover,
-[data-testid="collapsedControl"] button:hover {
-    background: rgba(124,92,252,0.35) !important;
+[data-testid="stSidebarCollapseButton"] button::before,
+button[aria-label*="Close"]::before {
+    content: "❮" !important;
+    font-size: 15px !important;
+    font-family: 'Inter', Arial, sans-serif !important;
+    color: var(--text-hi) !important;
+    display: block !important;
 }
 
-/* 5. Restore non-sidebar icons back to visible if needed */
-[data-testid="stSidebar"] .material-symbols-rounded {
-    font-family: 'Material Symbols Rounded', sans-serif !important;
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="collapsedControl"] button,
+button[aria-label*="Open"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(124,92,252,0.15) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    width: 36px !important;
+    height: 36px !important;
+    cursor: pointer !important;
+    position: relative !important;
+}
+[data-testid="stSidebarCollapsedControl"] button::before,
+[data-testid="collapsedControl"] button::before,
+button[aria-label*="Open"]::before {
+    content: "❯" !important;
+    font-size: 15px !important;
+    font-family: 'Inter', Arial, sans-serif !important;
+    color: var(--text-hi) !important;
+    display: block !important;
+}
+
+/* Hover effects for collapse buttons */
+[data-testid="stSidebarCollapseButton"] button:hover,
+[data-testid="stSidebarCollapsedControl"] button:hover,
+[data-testid="collapsedControl"] button:hover,
+button[aria-label*="Close"]:hover,
+button[aria-label*="Open"]:hover {
+    background: rgba(124,92,252,0.35) !important;
+    border-color: var(--accent-1) !important;
 }
 [data-testid="stSidebar"] input,
 [data-testid="stSidebar"] textarea {
