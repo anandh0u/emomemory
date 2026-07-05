@@ -224,8 +224,10 @@ def initialize_cognee():
             st.info("⚠️ Cognee Cloud not configured - using local memory")
             return False
         
-        # Configure Cognee Cloud
-        cognee.config.set_api_key(api_key)
+        # Set API key as environment variable for Cognee
+        os.environ["COGNEE_API_KEY"] = api_key
+        
+        # Initialize Cognee (it will read the environment variable)
         st.session_state.cognee_initialized = True
         logger.info("Cognee Cloud initialized successfully")
         st.success("✓ Cognee Cloud connected")
