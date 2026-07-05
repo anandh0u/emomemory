@@ -45,12 +45,23 @@ class FacialEmotionDetector:
             
             LOGGER.info(f"Loading facial emotion model: {self.model_name}")
             
-            self.feature_extractor = AutoImageProcessor.from_pretrained(self.model_name)
-            self.model = AutoModelForImageClassification.from_pretrained(self.model_name)
-            self.model.to(self.device)
-            self.model.eval()
-            
-            LOGGER.info("Facial emotion model loaded successfully")
+            # Try to load the model with error handling
+            try:
+                self.feature_extractor = AutoImageProcessor.from_pretrained(self.model_name)
+                self.model = AutoModelForImageClassification.from_pretrained(self.model_name)
+                self.model.to(self.device)
+                self.model.eval()
+                LOGGER.info("Facial emotion model loaded successfully")
+            except Exception as model_error:
+                LOGGER.error(f"Failed to load model {self.model_name}: {model_error}")
+                # Fallback to a lighter model
+                LOGGER.info("Falling back to lighter model: RickyIM/vit-base-patch16-224-facial-emotion-recognition")
+                self.model_name = "RickyIM/vit-base-patch16-224-facial-emotion-recognition"
+                self.feature_extractor = AutoImageProcessor.from_pretrained(self.model_name)
+                self.model = AutoModelForImageClassification.from_pretrained(self.model_name)
+                self.model.to(self.device)
+                self.model.eval()
+                LOGGER.info("Fallback facial emotion model loaded successfully")
             
         except ImportError as e:
             LOGGER.error(f"Failed to load transformers: {e}")
