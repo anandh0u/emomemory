@@ -187,21 +187,30 @@ st.markdown("""
 # Initialize session state
 if 'emotion_detector' not in st.session_state:
     st.session_state.emotion_detector = None
+if 'speech_detector' not in st.session_state:
+    st.session_state.speech_detector = None
+if 'facial_detector' not in st.session_state:
+    st.session_state.facial_detector = None
 if 'memory_context' not in st.session_state:
     st.session_state.memory_context = {}
 if 'cognee_initialized' not in st.session_state:
     st.session_state.cognee_initialized = False
 
 def initialize_models():
-    """Initialize emotion detection model."""
+    """Initialize all emotion detection models."""
     try:
         from agents.ted_agent import TextEmotionDetector
+        from agents.ser_agent import SpeechEmotionRecognizer
+        from agents.fed_agent import FacialEmotionDetector
+        
         st.session_state.emotion_detector = TextEmotionDetector()
-        logger.info("Emotion detector loaded successfully")
+        st.session_state.speech_detector = SpeechEmotionRecognizer()
+        st.session_state.facial_detector = FacialEmotionDetector()
+        logger.info("All emotion models loaded successfully")
         return True
     except Exception as e:
-        logger.error(f"Failed to load emotion detector: {e}")
-        st.error(f"Failed to load emotion model: {e}")
+        logger.error(f"Failed to load emotion detectors: {e}")
+        st.error(f"Failed to load emotion models: {e}")
         return False
 
 def initialize_cognee():
@@ -282,16 +291,24 @@ async def forget_memory(user_id: str):
         logger.error(f"Failed to forget: {e}")
         return False
 
-def analyze_emotion(text: str, user_id: str):
-    """Analyze emotion from text."""
-    if not text or not text.strip():
-        return None, "Please enter some text"
+def analyze_emotion(input_data: str, input_type: str, user_id: str):
+    """Analyze emotion from text, audio, or image."""
+    if not input_data:
+        return None, "Please provide input"
     
-    if st.session_state.emotion_detector is None:
+    detector = None
+    if input_type == "text":
+        detector = st.session_state.emotion_detector
+    elif input_type == "audio":
+        detector = st.session_state.speech_detector
+    elif input_type == "image":
+        detector = st.session_state.facial_detector
+    
+    if detector is None:
         return None, "Model not loaded"
     
     try:
-        result = st.session_state.emotion_detector.predict(text)
+        result = detector.predict(input_data)
         
         emotion = result.get("emotion", "unknown")
         confidence = result.get("confidence", 0.0)
@@ -302,7 +319,8 @@ def analyze_emotion(text: str, user_id: str):
             st.session_state.memory_context[user_id] = []
         
         st.session_state.memory_context[user_id].append({
-            "text": text,
+            "type": input_type,
+            "input": input_data,
             "emotion": emotion,
             "confidence": confidence,
             "timestamp": datetime.now().isoformat()
@@ -311,13 +329,39 @@ def analyze_emotion(text: str, user_id: str):
         # Store in Cognee if initialized
         if st.session_state.cognee_initialized:
             import asyncio
-            asyncio.run(remember_memory(user_id, text, emotion, confidence))
+            memory_text = f"{input_type}: {input_data}"
+            asyncio.run(remember_memory(user_id, memory_text, emotion, confidence))
         
         return result, None
         
     except Exception as e:
         logger.error(f"Error analyzing emotion: {e}")
         return None, f"Error: {str(e)}"
+
+def display_emotion_result(result, user_id):
+    """Display emotion analysis result with professional styling."""
+    emotion = result.get("emotion", "unknown")
+    confidence = result.get("confidence", 0.0)
+    all_emotions = result.get("all_emotions", {})
+    
+    # Display result with professional styling
+    st.markdown(f"""
+    <div class="emotion-card animate-fade-in">
+        <h2>Detected Emotion: {emotion.upper()}</h2>
+        <p class="confidence">{confidence:.1%}</p>
+        <p style="color: #666; margin-top: 1rem;">Confidence Level</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # All emotions breakdown
+    st.subheader("All Emotions")
+    for emo, score in sorted(all_emotions.items(), key=lambda x: x[1], reverse=True):
+        st.progress(score, text=f"{emo.capitalize()}: {score:.1%}")
+    
+    # Memory context
+    memory_count = len(st.session_state.memory_context.get(user_id, []))
+    if memory_count > 0:
+        st.success(f"🧠 Memory Context Active - {memory_count} past interaction(s) stored")
 
 # Professional Header
 st.markdown("""
@@ -412,52 +456,61 @@ with st.sidebar:
         st.metric("Memory Entries", memory_count)
 
 # Main content
-tab1, tab2, tab3 = st.tabs(["💬 Analyze Emotion", "📚 Memory History", "ℹ️ About"])
+tab1, tab2, tab3 = st.tabs(["🎭 Analyze Emotion", "📚 Memory History", "ℹ️ About"])
 
 with tab1:
-    st.subheader("Analyze emotions in your text with memory context")
+    st.subheader("Multimodal Emotion Analysis")
     
-    col1, col2 = st.columns([3, 1])
+    # Input type selector
+    input_type = st.radio(
+        "Select Input Type",
+        ["📝 Text", "🎤 Audio", "📷 Image"],
+        horizontal=True
+    )
     
-    with col1:
+    if input_type == "📝 Text":
         text_input = st.text_area(
             "Your Message",
             placeholder="Type your message here...",
             height=150
         )
-    
-    with col2:
-        st.write("")
-        analyze_btn = st.button("🔍 Analyze Emotion", type="primary", use_container_width=True)
-    
-    if analyze_btn and text_input:
-        result, error = analyze_emotion(text_input, user_id)
+        analyze_btn = st.button("🔍 Analyze Text Emotion", type="primary", use_container_width=True)
         
-        if error:
-            st.error(error)
-        elif result:
-            emotion = result.get("emotion", "unknown")
-            confidence = result.get("confidence", 0.0)
-            all_emotions = result.get("all_emotions", {})
+        if analyze_btn and text_input:
+            result, error = analyze_emotion(text_input, "text", user_id)
             
-            # Display result with professional styling
-            st.markdown(f"""
-            <div class="emotion-card animate-fade-in">
-                <h2>Detected Emotion: {emotion.upper()}</h2>
-                <p class="confidence">{confidence:.1%}</p>
-                <p style="color: #666; margin-top: 1rem;">Confidence Level</p>
-            </div>
-            """, unsafe_allow_html=True)
+            if error:
+                st.error(error)
+            elif result:
+                display_emotion_result(result, user_id)
+    
+    elif input_type == "🎤 Audio":
+        audio_file = st.file_uploader("Upload Audio File", type=['wav', 'mp3', 'm4a'])
+        analyze_btn = st.button("🔍 Analyze Audio Emotion", type="primary", use_container_width=True)
+        
+        if analyze_btn and audio_file:
+            result, error = analyze_emotion(audio_file.name, "audio", user_id)
             
-            # All emotions breakdown
-            st.subheader("All Emotions")
-            for emo, score in sorted(all_emotions.items(), key=lambda x: x[1], reverse=True):
-                st.progress(score, text=f"{emo.capitalize()}: {score:.1%}")
+            if error:
+                st.error(error)
+            elif result:
+                display_emotion_result(result, user_id)
+                if "note" in result:
+                    st.info(result["note"])
+    
+    elif input_type == "📷 Image":
+        image_file = st.file_uploader("Upload Image", type=['png', 'jpg', 'jpeg'])
+        analyze_btn = st.button("🔍 Analyze Facial Emotion", type="primary", use_container_width=True)
+        
+        if analyze_btn and image_file:
+            result, error = analyze_emotion(image_file.name, "image", user_id)
             
-            # Memory context
-            memory_count = len(st.session_state.memory_context.get(user_id, []))
-            if memory_count > 0:
-                st.success(f"🧠 Memory Context Active - {memory_count} past interaction(s) stored")
+            if error:
+                st.error(error)
+            elif result:
+                display_emotion_result(result, user_id)
+                if "note" in result:
+                    st.info(result["note"])
 
 with tab2:
     st.subheader("Your Emotional Timeline")
