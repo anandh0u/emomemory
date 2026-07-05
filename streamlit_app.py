@@ -91,17 +91,28 @@ st.markdown("""
     
     /* Sidebar styling - Dark theme (more visible) */
     .css-1d391kg {
-        background: linear-gradient(180deg, #0a0a12 0%, #0f0f1a 100%);
-        border-right: 2px solid rgba(102, 126, 234, 0.3);
+        background: linear-gradient(180deg, #050508 0%, #0a0a12 50%, #0f0f1a 100%);
+        border-right: 2px solid rgba(102, 126, 234, 0.4);
     }
     
     /* Make sidebar text more visible */
     .css-1d391kg h1, 
     .css-1d391kg h2, 
     .css-1d391kg h3,
+    .css-1d391kg h4,
     .css-1d391kg p,
-    .css-1d391kg label {
+    .css-1d391kg label,
+    .css-1d391kg span,
+    .css-1d391kg div {
         color: #ffffff !important;
+    }
+    
+    /* Make sidebar inputs more visible */
+    .css-1d391kg input,
+    .css-1d391kg textarea {
+        background: rgba(26, 26, 46, 0.8) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(102, 126, 234, 0.4) !important;
     }
     
     /* Button styling */
