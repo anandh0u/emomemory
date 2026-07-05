@@ -21,6 +21,13 @@ os.environ["DATA_ROOT_DIRECTORY"]   = os.path.abspath(os.path.join(temp_dir, ".c
 os.environ["data_root_directory"]   = os.path.abspath(os.path.join(temp_dir, ".cognee_data"))
 os.environ["COGNEE_LOGS_DIR"]       = os.path.abspath(os.path.join(temp_dir, ".cognee_logs"))
 
+# Copy all secrets from Streamlit secrets to environment variables for external package access
+try:
+    for key, value in st.secrets.items():
+        os.environ[key] = str(value)
+except Exception:
+    pass
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -584,10 +591,6 @@ def initialize_cognee():
         except Exception as e:
             logger.warning(f"Failed to clear cognee cache: {e}")
             
-        api_key = os.getenv("COGNEE_API_KEY")
-        if not api_key:
-            return False
-        os.environ["COGNEE_API_KEY"] = api_key
         st.session_state.cognee_initialized = True
         return True
     except Exception as e:
@@ -718,22 +721,34 @@ with st.sidebar:
 
     st.markdown('<div class="emo-divider"></div>', unsafe_allow_html=True)
 
-    # Cognee init
+    # API configuration inputs
+    st.markdown('<p class="section-heading" style="font-size:0.9rem;">&#x25C6; API Configuration</p>', unsafe_allow_html=True)
+    
+    cognee_key = st.text_input(
+        "Cognee API Key",
+        value=os.getenv("COGNEE_API_KEY", ""),
+        type="password",
+        placeholder="Enter Cognee Cloud API Key...",
+        help="Optional: Your Cognee Cloud API key"
+    )
+    if cognee_key:
+        os.environ["COGNEE_API_KEY"] = cognee_key
+        
+    openai_key = st.text_input(
+        "OpenAI API Key",
+        value=os.getenv("OPENAI_API_KEY", ""),
+        type="password",
+        placeholder="Enter OpenAI API Key...",
+        help="Required for memory graph generation (Improve Memory)"
+    )
+    if openai_key:
+        os.environ["OPENAI_API_KEY"] = openai_key
+        os.environ["LLM_API_KEY"] = openai_key
+
+    # Initialize cognee if not initialized
     if not st.session_state.cognee_initialized:
-        with st.spinner("Connecting to Cognee Cloud..."):
-            ok = initialize_cognee()
-        if ok:
-            st.markdown("""
-            <div class="status-pill status-on">&#x2726; Cognee Cloud Connected</div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="status-pill status-off">&#x25CC; Cognee Offline — Local Memory</div>
-            """, unsafe_allow_html=True)
-    else:
-        st.markdown("""
-        <div class="status-pill status-on">&#x2726; Cognee Cloud Connected</div>
-        """, unsafe_allow_html=True)
+        with st.spinner("Initializing Cognee..."):
+            initialize_cognee()
 
     st.markdown('<div class="emo-divider"></div>', unsafe_allow_html=True)
 
@@ -779,9 +794,11 @@ with st.sidebar:
     st.markdown('<div class="emo-divider"></div>', unsafe_allow_html=True)
     st.markdown('<p class="section-heading" style="font-size:0.9rem;">&#x25C6; System Status</p>', unsafe_allow_html=True)
 
-    model_ok    = st.session_state.emotion_detector is not None
-    cognee_ok   = st.session_state.cognee_initialized
-    mem_entries = len(st.session_state.memory_context.get(user_id, []))
+    model_ok     = st.session_state.emotion_detector is not None
+    cognee_ok    = st.session_state.cognee_initialized
+    cognee_cloud = len(os.getenv("COGNEE_API_KEY", "")) > 0
+    llm_ok       = len(os.getenv("OPENAI_API_KEY", os.getenv("LLM_API_KEY", ""))) > 0
+    mem_entries  = len(st.session_state.memory_context.get(user_id, []))
 
     st.markdown(f"""
     <div style="display:flex;flex-direction:column;gap:8px;">
@@ -789,7 +806,10 @@ with st.sidebar:
             {'&#x2726;' if model_ok  else '&#x25CC;'}  Emotion Models {'Active' if model_ok  else 'Inactive'}
         </div>
         <div class="status-pill {'status-on' if cognee_ok else 'status-off'}">
-            {'&#x2726;' if cognee_ok else '&#x25CC;'}  Cognee {'Online' if cognee_ok else 'Offline'}
+            {'&#x2726;' if cognee_ok else '&#x25CC;'}  Cognee {'Cloud' if cognee_cloud else 'Local'} {'Active' if cognee_ok else 'Offline'}
+        </div>
+        <div class="status-pill {'status-on' if llm_ok else 'status-off'}">
+            {'&#x2726;' if llm_ok else '&#x25CC;'}  LLM {'Active' if llm_ok else 'Missing Key'}
         </div>
         <div class="status-pill" style="background:rgba(0,229,255,0.1);color:#67e8f9 !important;border:1px solid rgba(0,229,255,0.2);">
             &#x25C6; Memory &nbsp; {mem_entries} entries
