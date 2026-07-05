@@ -1,0 +1,136 @@
+# EmoMemory Requirements
+# Memory-Enabled Emotion AI powered by Cognee
+# Built for WeMakeDevs Hackathon
+
+# ========================================
+# Core Memory & AI Framework
+# ========================================
+cognee>=0.1.0              # Cognee memory layer - THE KEY COMPONENT!
+openai>=1.0.0              # For LLM integration if needed
+
+# ========================================
+# Web Interface
+# ========================================
+gradio>=4.0.0              # Interactive web demo interface
+fastapi>=0.104.0           # Optional: For custom API endpoints
+uvicorn>=0.24.0            # ASGI server for FastAPI
+
+# ========================================
+# Emotion Detection Models
+# ========================================
+# Text Emotion Detection
+transformers>=4.35.0       # HuggingFace transformers for text models
+torch>=2.1.0               # PyTorch for deep learning models
+tokenizers>=0.15.0         # Fast tokenization
+
+# Speech/Audio Emotion Recognition
+librosa>=0.10.1            # Audio feature extraction
+soundfile>=0.12.1          # Audio file I/O
+pyaudio>=0.2.14            # Audio capture (optional)
+pydub>=0.25.1              # Audio manipulation
+
+# Facial Emotion Detection
+opencv-python>=4.8.0       # Computer vision for face detection
+ultralytics>=8.0.0         # YOLOv8 for face detection
+pillow>=10.1.0             # Image processing
+mediapipe>=0.10.8          # Face landmarks (alternative)
+
+# ========================================
+# Machine Learning & Data Science
+# ========================================
+numpy>=1.24.0              # Numerical computing
+pandas>=2.1.0              # Data manipulation
+scikit-learn>=1.3.0        # ML algorithms
+scipy>=1.11.0              # Scientific computing
+joblib>=1.3.0              # Model serialization
+
+# Advanced ML (optional but recommended)
+catboost>=1.2.0            # Gradient boosting (used in your existing models)
+xgboost>=2.0.0             # Alternative boosting
+lightgbm>=4.1.0            # Light gradient boosting
+
+# ========================================
+# Data Storage & Database
+# ========================================
+# Cognee handles storage internally, but these may be useful:
+qdrant-client>=1.7.0       # Vector database (if using custom setup)
+chromadb>=0.4.0            # Alternative vector DB
+lancedb>=0.3.0             # Another vector DB option
+
+# ========================================
+# Utilities & Tools
+# ========================================
+python-dotenv>=1.0.0       # Environment variables management
+pyyaml>=6.0.1              # YAML configuration files
+tqdm>=4.66.0               # Progress bars
+loguru>=0.7.2              # Better logging (alternative to logging)
+
+# ========================================
+# Video Processing (for multimodal)
+# ========================================
+av>=11.0.0                 # Video I/O
+imageio>=2.33.0            # Image/video reading
+imageio-ffmpeg>=0.4.9      # FFmpeg wrapper
+
+# ========================================
+# API & Networking
+# ========================================
+requests>=2.31.0           # HTTP requests
+aiohttp>=3.9.0             # Async HTTP
+httpx>=0.25.0              # Modern HTTP client
+websockets>=12.0           # WebSocket support
+
+# ========================================
+# Testing & Development
+# ========================================
+pytest>=7.4.0              # Testing framework
+pytest-asyncio>=0.21.0     # Async testing
+black>=23.12.0             # Code formatting
+flake8>=6.1.0              # Code linting
+mypy>=1.7.0                # Type checking
+
+# ========================================
+# Documentation
+# ========================================
+mkdocs>=1.5.0              # Documentation generator (optional)
+mkdocs-material>=9.5.0     # Material theme for docs
+
+# ========================================
+# Deployment & Production
+# ========================================
+gunicorn>=21.2.0           # WSGI HTTP server
+python-multipart>=0.0.6    # File upload support
+python-jose>=3.3.0         # JWT tokens (if adding auth)
+
+# ========================================
+# Platform-Specific (Windows Support)
+# ========================================
+# These may need special handling on Windows:
+# pywin32>=306             # Windows-specific (uncomment if needed)
+
+# ========================================
+# Optional: Cloud Services
+# ========================================
+# For Cognee Cloud integration:
+# boto3>=1.34.0           # AWS SDK (if using AWS)
+# azure-storage-blob>=12.19.0  # Azure Blob Storage
+# google-cloud-storage>=2.14.0 # Google Cloud Storage
+
+# ========================================
+# Notes for Installation:
+# ========================================
+# 1. Install PyTorch separately if you need GPU support:
+#    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+#
+# 2. On Windows, some packages may require Visual C++ Build Tools
+#
+# 3. For audio processing, you may need to install FFmpeg:
+#    - Windows: Download from ffmpeg.org
+#    - Linux: sudo apt-get install ffmpeg
+#    - Mac: brew install ffmpeg
+#
+# 4. For Cognee Cloud, set your API key:
+#    export COGNEE_API_KEY=your_api_key_here
+#
+# 5. Install all requirements:
+#    pip install -r requirements.txt
